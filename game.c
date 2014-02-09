@@ -62,7 +62,7 @@ void GameGatherInput(bool* Continue)
 				if (ev.key.keysym.sym == SDLK_RETURN /* GCW Zero: Start */
 				 || ev.key.keysym.sym == SDLK_SPACE  /* GCW Zero: Y */)
 					Pause = !Pause;
-				else if (ev.key.keysym.sym == SDLK_RETURN /* GCW Zero: Select */)
+				else if (ev.key.keysym.sym == SDLK_ESCAPE /* GCW Zero: Select */)
 				{
 					*Continue = false;
 					return;
