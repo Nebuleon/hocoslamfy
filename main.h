@@ -25,6 +25,7 @@ typedef void (*TDoLogic) (bool* Continue, bool* Error);
 typedef void (*TOutputFrame) (void);
 
 extern SDL_Surface* Screen;
+extern SDL_Surface* frames_bg;
 extern TGatherInput GatherInput;
 extern TDoLogic     DoLogic;
 extern TOutputFrame OutputFrame;
