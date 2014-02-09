@@ -50,7 +50,7 @@ static bool                   Pause;
 
 // Where the player is. (Upper-left corner, meters.)
 static float                  PlayerY;
-static float                  PlayerX = 24.0f;
+static float                  PlayerX = 64.0f;
 // Where the player is going. (Meters per second.)
 static float                  PlayerSpeed;
 
@@ -104,6 +104,9 @@ void GameDoLogic(bool* Continue, bool* Error)
 			{
 				RectangleCount--;
 				memmove(&Rectangles[i], &Rectangles[i + 1], RectangleCount * sizeof(struct HocoslamfyRect));
+			}
+			if ((Rectangles[i].Right < PlayerX) && (Rectangles[i].Right > (PlayerX + FIELD_SCROLL)))
+			{
 				if (!PointAwarded)
 				{
 					Score++;
@@ -186,14 +189,16 @@ void GameOutputFrame()
 			BGRectEdst.y=54;
 			BGRectEdst.w=320;
 			BGRectEdst.h=138;
-	if (CounterE < 4) {
-		CounterE++;
-	} else {
-		CounterE = 0;
-		if (BGCounterE < 160) {
-			BGCounterE++;
+	if (!Pause) {
+		if (CounterE < 4) {
+			CounterE++;
 		} else {
-			BGCounterE = 0;
+			CounterE = 0;
+			if (BGCounterE < 160) {
+				BGCounterE++;
+			} else {
+				BGCounterE = 0;
+			}
 		}
 	}
 	SDL_BlitSurface(frames_bg, &BGRectE, Screen, &BGRectEdst);
@@ -209,14 +214,16 @@ void GameOutputFrame()
 			BGRectDdst.y=192;
 			BGRectDdst.w=320;
 			BGRectDdst.h=8;
-	if (CounterD < 3) {
-		CounterD++;
-	} else {
-		CounterD = 0;
-		if (BGCounterD < 160) {
-			BGCounterD++;
+	if (!Pause) {
+		if (CounterD < 3) {
+			CounterD++;
 		} else {
-			BGCounterD = 0;
+			CounterD = 0;
+			if (BGCounterD < 160) {
+				BGCounterD++;
+			} else {
+				BGCounterD = 0;
+			}
 		}
 	}
 	SDL_BlitSurface(frames_bg, &BGRectD, Screen, &BGRectDdst);
@@ -242,14 +249,16 @@ void GameOutputFrame()
 			BGRectC2dst.y=200;
 			BGRectC2dst.w=320;
 			BGRectC2dst.h=10;
-	if (CounterC < 2) {
-		CounterC++;
-	} else {
-		CounterC = 0;
-		if (BGCounterC < 160) {
-			BGCounterC++;
+	if (!Pause) {
+		if (CounterC < 2) {
+			CounterC++;
 		} else {
-			BGCounterC = 0;
+			CounterC = 0;
+			if (BGCounterC < 160) {
+				BGCounterC++;
+			} else {
+				BGCounterC = 0;
+			}
 		}
 	}
 	SDL_BlitSurface(frames_bg, &BGRectC, Screen, &BGRectCdst);
@@ -276,14 +285,16 @@ void GameOutputFrame()
 			BGRectB2dst.y=210;
 			BGRectB2dst.w=320;
 			BGRectB2dst.h=12;
-	if (CounterB < 1) {
-		CounterB++;
-	} else {
-		CounterB = 0;
-		if (BGCounterB < 160) {
-			BGCounterB++;
+	if (!Pause) {
+		if (CounterB < 1) {
+			CounterB++;
 		} else {
-			BGCounterB = 0;
+			CounterB = 0;
+			if (BGCounterB < 160) {
+				BGCounterB++;
+			} else {
+				BGCounterB = 0;
+			}
 		}
 	}
 	SDL_BlitSurface(frames_bg, &BGRectB, Screen, &BGRectBdst);
@@ -310,10 +321,12 @@ void GameOutputFrame()
 			BGRectA2dst.y=222;
 			BGRectA2dst.w=320;
 			BGRectA2dst.h=18;
-	if (BGCounterA < 160) {
-		BGCounterA++;
-	} else {
-		BGCounterA = 0;
+	if (!Pause) {
+		if (BGCounterA < 160) {
+			BGCounterA++;
+		} else {
+			BGCounterA = 0;
+		}
 	}
 	SDL_BlitSurface(frames_bg, &BGRectA, Screen, &BGRectAdst);
 	SDL_BlitSurface(frames_bg, &BGRectA2, Screen, &BGRectA2dst);
@@ -333,13 +346,29 @@ void GameOutputFrame()
 
 	// Draw the character.
 	SDL_Rect PlayerPixels = {
-		.x = PlayerX,
-		.y = SCREEN_HEIGHT - (PlayerY * SCREEN_HEIGHT / FIELD_HEIGHT),
-		.w = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT),
-		.h = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT)
+		.x = (PlayerX - 1),
+		.y = (SCREEN_HEIGHT - (PlayerY * SCREEN_HEIGHT / FIELD_HEIGHT) -1),
+		.w = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT) +2,
+		.h = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT) +2
 	};
-	SDL_FillRect(Screen, &PlayerPixels, SDL_MapRGB(Screen->format, 255, 255, 255));
-	//SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, Screen, &PlayerPixels);
+	SDL_Rect P1Rect;
+			P1Rect.x=0;
+			P1Rect.y=0;
+			P1Rect.w=16;
+			P1Rect.h=16;
+	if (CounterB < 1) {
+		P1Rect.x=16;
+	} else {
+		P1Rect.x=0;
+	}
+	if ((PlayerSpeed < 0.0f) && (PlayerSpeed > -1.0f)) {
+		P1Rect.x=32;
+	}
+	if (PlayerSpeed < -1.0f) {
+		P1Rect.x=48;
+	}
+	SDL_BlitSurface(frames_player, &P1Rect, Screen, &PlayerPixels);
+	
 
 	// Draw the player's current score.
 	char ScoreString[17];
