@@ -1,0 +1,9 @@
+[Desktop Entry]
+
+Name=Hocoslamfy
+Comment=Avoid the rectangles while flying with your square
+Exec=hocoslamfy
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=games;
