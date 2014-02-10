@@ -27,13 +27,13 @@
 #include "platform.h"
 #include "SDL_image.h"
 
-static bool         Continue            = true;
-static bool         Error               = false;
+static bool         Continue                         = true;
+static bool         Error                            = false;
 
-       SDL_Surface* Screen              = NULL;
-       SDL_Surface* BackgroundImage     = NULL;
-       SDL_Surface* CharacterFrames     = NULL;
-       SDL_Surface* ColumnImage         = NULL;
+       SDL_Surface* Screen                           = NULL;
+       SDL_Surface* BackgroundImages[BG_LAYER_COUNT] = { NULL };
+       SDL_Surface* CharacterFrames                  = NULL;
+       SDL_Surface* ColumnImage                      = NULL;
 
        TGatherInput GatherInput;
        TDoLogic     DoLogic;

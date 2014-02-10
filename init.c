@@ -28,6 +28,17 @@
 #include "platform.h"
 #include "title.h"
 
+static const char* BackgroundImageNames[BG_LAYER_COUNT] = {
+	"Sky.png",
+	"Mountains.png",
+	"Clouds3.png",
+	"Clouds2.png",
+	"Clouds1.png",
+	"Grass3.png",
+	"Grass2.png",
+	"Grass1.png"
+};
+
 static bool CheckImage(bool* Continue, bool* Error, const SDL_Surface* Image, const char* Name)
 {
 	if (Image == NULL)
@@ -75,9 +86,13 @@ void Initialize(bool* Continue, bool* Error)
 
 	SDL_ShowCursor(0);
 
-	BackgroundImage = IMG_Load("bg.png");
-	if (!CheckImage(Continue, Error, BackgroundImage, "bg.png"))
-		return;
+	uint32_t i;
+	for (i = 0; i < BG_LAYER_COUNT; i++)
+	{
+		BackgroundImages[i] = IMG_Load(BackgroundImageNames[i]);
+		if (!CheckImage(Continue, Error, BackgroundImages[i], BackgroundImageNames[i]))
+			return;
+	}
 	CharacterFrames = IMG_Load("player.png");
 	if (!CheckImage(Continue, Error, CharacterFrames, "player.png"))
 		return;
@@ -93,8 +108,12 @@ void Initialize(bool* Continue, bool* Error)
 
 void Finalize()
 {
-	SDL_FreeSurface(BackgroundImage);
-	BackgroundImage = NULL;
+	uint32_t i;
+	for (i = 0; i < BG_LAYER_COUNT; i++)
+	{
+		SDL_FreeSurface(BackgroundImages[i]);
+		BackgroundImages[i] = NULL;
+	}
 	SDL_FreeSurface(CharacterFrames);
 	CharacterFrames = NULL;
 	SDL_FreeSurface(ColumnImage);

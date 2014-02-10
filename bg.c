@@ -26,34 +26,36 @@
 #include "game.h"
 #include "bg.h"
 
-// The X coordinates from which the various pieces of the background start to
+// The X coordinates from which the various layers of the background start to
 // be rendered. (In meters.)
-static       float    BG_X     [BG_PIECE_COUNT] = {
+static       float    BG_X     [BG_LAYER_COUNT] = {
 	0.0f, 0.0f, 0.0f, 0.0f,
 	0.0f, 0.0f, 0.0f, 0.0f
 };
 // The speed at which the X coordinate moves, for each piece of the background.
 // (In meters per second.)
-static const float    BG_Speed [BG_PIECE_COUNT] = {
-	BG_SPEED_4, BG_SPEED_3, BG_SPEED_2, BG_SPEED_1,
-	BG_SPEED_2, BG_SPEED_3, BG_SPEED_4, BG_SPEED_5
+static const float    BG_Speed [BG_LAYER_COUNT] = {
+	BG_SPEED_1, BG_SPEED_2, BG_SPEED_3, BG_SPEED_4,
+	BG_SPEED_5, BG_SPEED_3, BG_SPEED_4, BG_SPEED_5
 };
 
-// The Y coordinates at which the various pieces of the background start, and
-// their heights. (In pixels of the background image.)
-static const uint32_t BG_StartY[BG_PIECE_COUNT] = {
-	  0,  28,  42,  54,
-	192, 200, 210, 222
+// The Y coordinates at which the various layers of the background start, and
+// their heights, on the screen. (In pixels of the screen.)
+static const uint32_t BG_StartY[BG_LAYER_COUNT] = {
+	/* "Sky.png", "Mountains.png", "Clouds3.png", "Clouds2.png",
+	 * "Clouds1.png", "Grass3.png", "Grass2.png", "Grass1.png" */
+	 50, 128,  32,  16,
+	  0, 180, 190, 204
 };
-static const uint32_t BG_Height[BG_PIECE_COUNT] = {
-	 28,  14,  12, 138,
-	  8,  10,  12,  18
+static const uint32_t BG_Height[BG_LAYER_COUNT] = {
+	140,  60,  28,  28,
+	 32,  20,  28,  36
 };
 
 void AdvanceBackground(uint32_t Milliseconds)
 {
 	uint32_t i;
-	for (i = 0; i < BG_PIECE_COUNT; i++)
+	for (i = 0; i < BG_LAYER_COUNT; i++)
 	{
 		BG_X[i] = fmodf(BG_X[i] + BG_Speed[i] * Milliseconds / 1000, FIELD_WIDTH * 0.5f);
 	}
@@ -62,11 +64,11 @@ void AdvanceBackground(uint32_t Milliseconds)
 void DrawBackground(void)
 {
 	uint32_t i;
-	for (i = 0; i < BG_PIECE_COUNT; i++)
+	for (i = 0; i < BG_LAYER_COUNT; i++)
 	{
 		SDL_Rect SourceRect = {
 			.x = (int) (BG_X[i] * SCREEN_WIDTH / FIELD_WIDTH),
-			.y = BG_StartY[i],
+			.y = 0,
 			.w = SCREEN_WIDTH,
 			.h = BG_Height[i] };
 		SDL_Rect DestRect = {
@@ -74,6 +76,6 @@ void DrawBackground(void)
 			.y = BG_StartY[i],
 			.w = SCREEN_WIDTH,
 			.h = BG_Height[i] };
-		SDL_BlitSurface(BackgroundImage, &SourceRect, Screen, &DestRect);
+		SDL_BlitSurface(BackgroundImages[i], &SourceRect, Screen, &DestRect);
 	}
 }
