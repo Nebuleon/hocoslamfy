@@ -28,6 +28,7 @@
 
 #include "main.h"
 #include "init.h"
+#include "platform.h"
 #include "game.h"
 #include "score.h"
 #include "bg.h"
@@ -60,26 +61,14 @@ void GameGatherInput(bool* Continue)
 
 	while (SDL_PollEvent(&ev))
 	{
-		switch (ev.type)
+		if (IsBoostEvent(&ev))
+			Boost = true;
+		else if (IsPauseEvent(&ev))
+			Pause = !Pause;
+		else if (IsExitGameEvent(&ev))
 		{
-			case SDL_KEYDOWN:
-				if (ev.key.keysym.sym == SDLK_LCTRL  /* GCW Zero: A */
-				 || ev.key.keysym.sym == SDLK_LALT   /* GCW Zero: B */)
-					Boost = true;
-				if (ev.key.keysym.sym == SDLK_RETURN /* GCW Zero: Start */
-				 || ev.key.keysym.sym == SDLK_SPACE  /* GCW Zero: Y */)
-					Pause = !Pause;
-				else if (ev.key.keysym.sym == SDLK_ESCAPE /* GCW Zero: Select */)
-				{
-					*Continue = false;
-					return;
-				}
-				break;
-			case SDL_QUIT:
-				*Continue = false;
-				break;
-			default:
-				break;
+			*Continue = false;
+			return;
 		}
 	}
 }

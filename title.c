@@ -18,29 +18,21 @@
  */
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "SDL.h"
 #include "SDL_image.h"
 
 #include "main.h"
 #include "init.h"
+#include "platform.h"
 #include "game.h"
 #include "title.h"
 #include "bg.h"
 #include "text.h"
 
-static int BGCounterA = 0;
-static int BGCounterB = 0;
-static int BGCounterC = 0;
-static int BGCounterD = 0;
-static int BGCounterE = 0;
-static int CounterB = 0;
-static int CounterC = 0;
-static int CounterD = 0;
-static int CounterE = 0;
-static int BeeCounter = -60;
-
-static bool WaitingForRelease = false;
+static bool  WaitingForRelease = false;
+static char* WelcomeMessage    = NULL;
 
 void TitleScreenGatherInput(bool* Continue)
 {
@@ -48,33 +40,28 @@ void TitleScreenGatherInput(bool* Continue)
 
 	while (SDL_PollEvent(&ev))
 	{
-		switch (ev.type)
+		if (IsEnterGamePressingEvent(&ev))
+			WaitingForRelease = true;
+		else if (IsEnterGameReleasingEvent(&ev))
 		{
-			case SDL_KEYDOWN:
-				if (ev.key.keysym.sym == SDLK_LCTRL  /* GCW Zero: A */
-				 || ev.key.keysym.sym == SDLK_RETURN /* GCW Zero: Start */)
-					WaitingForRelease = true;
-				else if (ev.key.keysym.sym == SDLK_LALT   /* GCW Zero: B */
-				      || ev.key.keysym.sym == SDLK_ESCAPE /* GCW Zero: Select */)
-				{
-					*Continue = false;
-					return;
-				}
-				break;
-			case SDL_KEYUP:
-				if (ev.key.keysym.sym == SDLK_LCTRL  /* GCW Zero: A */
-				 || ev.key.keysym.sym == SDLK_RETURN /* GCW Zero: Start */)
-				{
-					WaitingForRelease = false;
-					ToGame();
-					return;
-				}
-				break;
-			case SDL_QUIT:
-				*Continue = false;
-				break;
-			default:
-				break;
+			WaitingForRelease = false;
+			ToGame();
+			if (WelcomeMessage != NULL)
+			{
+				free(WelcomeMessage);
+				WelcomeMessage = NULL;
+			}
+			return;
+		}
+		else if (IsExitGameEvent(&ev))
+		{
+			*Continue = false;
+			if (WelcomeMessage != NULL)
+			{
+				free(WelcomeMessage);
+				WelcomeMessage = NULL;
+			}
+			return;
 		}
 	}
 }
@@ -90,7 +77,7 @@ void TitleScreenOutputFrame()
 
 	if (SDL_MUSTLOCK(Screen))
 		SDL_LockSurface(Screen);
-	PrintStringOutline("Welcome to HOCOSLAMFY\n\nPress A or Start to play\nor B or Select to exit\n\nIn-game:\nA or B to rise\nStart to pause\nSelect to exit",
+	PrintStringOutline(WelcomeMessage,
 		SDL_MapRGB(Screen->format, 255, 255, 255),
 		SDL_MapRGB(Screen->format, 0, 0, 0),
 		Screen->pixels,
@@ -109,6 +96,17 @@ void TitleScreenOutputFrame()
 
 void ToTitleScreen(void)
 {
+	if (WelcomeMessage == NULL)
+	{
+		int Length = 2, NewLength;
+		WelcomeMessage = malloc(Length);
+		while ((NewLength = snprintf(WelcomeMessage, Length, "Welcome to HOCOSLAMFY\n\nPress %s to play\nor %s to exit\n\nIn-game:\n%s to rise\n%s to pause\n%s to exit", GetEnterGamePrompt(), GetExitGamePrompt(), GetBoostPrompt(), GetPausePrompt(), GetExitGamePrompt())) >= Length)
+		{
+			Length = NewLength + 1;
+			WelcomeMessage = realloc(WelcomeMessage, Length);
+		}
+	}
+
 	GatherInput = TitleScreenGatherInput;
 	DoLogic     = TitleScreenDoLogic;
 	OutputFrame = TitleScreenOutputFrame;

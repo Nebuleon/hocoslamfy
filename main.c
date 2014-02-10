@@ -24,6 +24,7 @@
 
 #include "main.h"
 #include "init.h"
+#include "platform.h"
 #include "SDL_image.h"
 
 static bool         Continue            = true;
@@ -41,18 +42,17 @@ static bool         Error               = false;
 int main(int argc, char* argv[])
 {
 	Initialize(&Continue, &Error);
-	Uint32 Ticks = SDL_GetTicks();
-	Uint32 Duration = 0;
+	Uint32 Duration = 16;
 	while (Continue)
 	{
-		DoLogic(&Continue, &Error, Duration);
-		OutputFrame();
-		SDL_Delay(8);
 		GatherInput(&Continue);
-
-		Uint32 NewTicks = SDL_GetTicks();
-		Duration = NewTicks - Ticks;
-		Ticks = NewTicks;
+		if (!Continue)
+			break;
+		DoLogic(&Continue, &Error, Duration);
+		if (!Continue)
+			break;
+		OutputFrame();
+		Duration = ToNextFrame();
 	}
 	Finalize();
 	return Error ? 1 : 0;

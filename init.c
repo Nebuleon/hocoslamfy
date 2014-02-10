@@ -25,6 +25,7 @@
 
 #include "main.h"
 #include "init.h"
+#include "platform.h"
 #include "title.h"
 
 static bool CheckImage(bool* Continue, bool* Error, const SDL_Surface* Image, const char* Name)
@@ -84,11 +85,19 @@ void Initialize(bool* Continue, bool* Error)
 	if (!CheckImage(Continue, Error, ColumnImage, "column.png"))
 		return;
 
+	InitializePlatform();
+
 	// Title screen. (-> title.c)
 	ToTitleScreen();
 }
 
 void Finalize()
 {
+	SDL_FreeSurface(BackgroundImage);
+	BackgroundImage = NULL;
+	SDL_FreeSurface(CharacterFrames);
+	CharacterFrames = NULL;
+	SDL_FreeSurface(ColumnImage);
+	ColumnImage = NULL;
 	SDL_Quit();
 }

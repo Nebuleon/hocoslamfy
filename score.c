@@ -26,15 +26,15 @@
 
 #include "main.h"
 #include "init.h"
+#include "platform.h"
 #include "game.h"
 #include "score.h"
 #include "bg.h"
 #include "text.h"
 
-static bool                WaitingForRelease = false;
+static bool  WaitingForRelease = false;
 
-static uint32_t            ScoreShown;
-static enum GameOverReason GameOverReasonShown;
+static char* ScoreMessage      = NULL;
 
 void ScoreGatherInput(bool* Continue)
 {
@@ -42,33 +42,28 @@ void ScoreGatherInput(bool* Continue)
 
 	while (SDL_PollEvent(&ev))
 	{
-		switch (ev.type)
+		if (IsEnterGamePressingEvent(&ev))
+			WaitingForRelease = true;
+		else if (IsEnterGameReleasingEvent(&ev))
 		{
-			case SDL_KEYDOWN:
-				if (ev.key.keysym.sym == SDLK_LCTRL  /* GCW Zero: A */
-				 || ev.key.keysym.sym == SDLK_RETURN /* GCW Zero: Start */)
-					WaitingForRelease = true;
-				else if (ev.key.keysym.sym == SDLK_LALT   /* GCW Zero: B */
-				      || ev.key.keysym.sym == SDLK_ESCAPE /* GCW Zero: Select */)
-				{
-					*Continue = false;
-					return;
-				}
-				break;
-			case SDL_KEYUP:
-				if (ev.key.keysym.sym == SDLK_LCTRL  /* GCW Zero: A */
-				 || ev.key.keysym.sym == SDLK_RETURN /* GCW Zero: Start */)
-				{
-					WaitingForRelease = false;
-					ToGame();
-					return;
-				}
-				break;
-			case SDL_QUIT:
-				*Continue = false;
-				break;
-			default:
-				break;
+			WaitingForRelease = false;
+			ToGame();
+			if (ScoreMessage != NULL)
+			{
+				free(ScoreMessage);
+				ScoreMessage = NULL;
+			}
+			return;
+		}
+		else if (IsExitGameEvent(&ev))
+		{
+			*Continue = false;
+			if (ScoreMessage != NULL)
+			{
+				free(ScoreMessage);
+				ScoreMessage = NULL;
+			}
+			return;
 		}
 	}
 }
@@ -81,22 +76,9 @@ void ScoreDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 void ScoreOutputFrame()
 {
 	DrawBackground();
-
-	const char* GameOverReasonString = "";
-	switch (GameOverReasonShown)
-	{
-		case FIELD_BORDER_COLLISION:
-			GameOverReasonString = "You crashed into the wall";
-			break;
-		case RECTANGLE_COLLISION:
-			GameOverReasonString = "You crashed into an object";
-			break;
-	}
-	char Message[256];
-	sprintf(Message, "GAME OVER\n%s\n\nYour score was %" PRIu32 "\n\nPress A or Start to play again\nor B or Select to exit", GameOverReasonString, ScoreShown);
 	if (SDL_MUSTLOCK(Screen))
 		SDL_LockSurface(Screen);
-	PrintStringOutline(Message,
+	PrintStringOutline(ScoreMessage,
 		SDL_MapRGB(Screen->format, 255, 255, 255),
 		SDL_MapRGB(Screen->format, 0, 0, 0),
 		Screen->pixels,
@@ -115,8 +97,30 @@ void ScoreOutputFrame()
 
 void ToScore(uint32_t Score, enum GameOverReason GameOverReason)
 {
-	ScoreShown          = Score;
-	GameOverReasonShown = GameOverReason;
+	if (ScoreMessage != NULL)
+	{
+		free(ScoreMessage);
+		ScoreMessage = NULL;
+	}
+	int Length = 2, NewLength;
+	ScoreMessage = malloc(Length);
+
+	const char* GameOverReasonString = "";
+	switch (GameOverReason)
+	{
+		case FIELD_BORDER_COLLISION:
+			GameOverReasonString = "You crashed into the wall";
+			break;
+		case RECTANGLE_COLLISION:
+			GameOverReasonString = "You crashed into an object";
+			break;
+	}
+
+	while ((NewLength = snprintf(ScoreMessage, Length, "GAME OVER\n%s\n\nYour score was %" PRIu32 "\n\nPress %s to play again\nor %s to exit", GameOverReasonString, Score, GetEnterGamePrompt(), GetExitGamePrompt())) >= Length)
+	{
+		Length = NewLength + 1;
+		ScoreMessage = realloc(ScoreMessage, Length);
+	}
 
 	GatherInput = ScoreGatherInput;
 	DoLogic     = ScoreDoLogic;

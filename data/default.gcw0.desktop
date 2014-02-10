@@ -2,7 +2,7 @@
 
 Name=Hocoslamfy
 Comment=Avoid the rectangles while flying with your square
-Exec=hocoslamfy
+Exec=hocoslamfy-od
 Terminal=false
 Type=Application
 StartupNotify=true

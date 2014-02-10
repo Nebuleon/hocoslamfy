@@ -1,9 +1,11 @@
 hocoslamfy
 
-You are a small white square and you must fly to avoid the rectangles that are out to get you!
+You are a small bee and you must fly to avoid the columns!
 
-This game requires SDL 1.2 and a C compiler. It is optimised for low-resolution screens.
-
-Currently this is nothing more than a proof of concept that resembles the physics of Flappy Bird, but without any graphical assets. It was made in 4 hours and 30 minutes.
+This game requires SDL 1.2, SDL-image 1.2 and a C compiler. It is optimised for low-resolution screens.
 
 Everything's under the GPL version 2.
+
+To compile this for PC, use `make clean; make` on a PC with SDL and SDL-image 1.2. You'll then get a windowed SDL game.
+
+To compile this for OpenDingux, use `make TARGET=hocoslamfy-od clean; make TARGET=hocoslamfy-od opk` on a PC with the `PATH` set to include your OpenDingux mipsel toolchain.
