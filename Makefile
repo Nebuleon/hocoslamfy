@@ -16,7 +16,7 @@ DEFS        :=
 
 CFLAGS       = $(SDL_CFLAGS) -Wall -Wno-unused-variable \
                -O2 -fomit-frame-pointer $(DEFS) $(INCLUDE)
-LDFLAGS     := $(SDL_LIBS) -lm
+LDFLAGS     := $(SDL_LIBS) -lm -lSDL_image
 
 include Makefile.rules
 
