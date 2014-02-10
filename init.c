@@ -20,9 +20,27 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "SDL.h"
+#include "SDL_image.h"
+
 #include "main.h"
 #include "init.h"
 #include "title.h"
+
+static bool CheckImage(bool* Continue, bool* Error, const SDL_Surface* Image, const char* Name)
+{
+	if (Image == NULL)
+	{
+		*Continue = false;  *Error = true;
+		printf("%s: IMG_Load failed: %s\n", Name, IMG_GetError());
+		return false;
+	}
+	else
+	{
+		printf("Successfully loaded %s\n", Name);
+		return true;
+	}
+}
 
 void Initialize(bool* Continue, bool* Error)
 {
@@ -55,6 +73,16 @@ void Initialize(bool* Continue, bool* Error)
 		printf("SDL_SetVideoMode succeeded\n");
 
 	SDL_ShowCursor(0);
+
+	BackgroundImage = IMG_Load("bg.png");
+	if (!CheckImage(Continue, Error, BackgroundImage, "bg.png"))
+		return;
+	CharacterFrames = IMG_Load("player.png");
+	if (!CheckImage(Continue, Error, CharacterFrames, "player.png"))
+		return;
+	ColumnImage = IMG_Load("column.png");
+	if (!CheckImage(Continue, Error, ColumnImage, "column.png"))
+		return;
 
 	// Title screen. (-> title.c)
 	ToTitleScreen();

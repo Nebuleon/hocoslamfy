@@ -28,6 +28,7 @@
 #include "init.h"
 #include "game.h"
 #include "score.h"
+#include "bg.h"
 #include "text.h"
 
 static bool                WaitingForRelease = false;
@@ -69,13 +70,14 @@ void ScoreGatherInput(bool* Continue)
 	}
 }
 
-void ScoreDoLogic(bool* Continue, bool* Error)
+void ScoreDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 {
+	AdvanceBackground(Milliseconds);
 }
 
 void ScoreOutputFrame()
 {
-	SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 48, 0));
+	DrawBackground();
 
 	const char* GameOverReasonString = "";
 	switch (GameOverReasonShown)

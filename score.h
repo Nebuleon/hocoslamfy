@@ -17,6 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef _SCORE_H_
+#define _SCORE_H_
+
 #include <stdbool.h>
 
 enum GameOverReason
@@ -26,3 +29,5 @@ enum GameOverReason
 };
 
 extern void ToScore(uint32_t Score, enum GameOverReason GameOverReason);
+
+#endif /* !defined(_SCORE_H_) */

@@ -17,6 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef _TEXT_H_
+#define _TEXT_H_
+
 #include <stdint.h>
 
 enum HorizontalAlignment {
@@ -47,3 +50,5 @@ void PrintStringOutline(const char* String, uint16_t TextColor, uint16_t Outline
 extern uint32_t GetRenderedWidth(const char* str);
 
 extern uint32_t GetRenderedHeight(const char* str);
+
+#endif /* !defined(_TEXT_H_) */

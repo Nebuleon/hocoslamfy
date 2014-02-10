@@ -1,5 +1,5 @@
 /*
- * Hocoslamfy, title screen header
+ * Hocoslamfy, background rendering header
  * Copyright (C) 2014 Nebuleon Fumika <nebuleon@gcw-zero.com>
  * 
  * This program is free software; you can redistribute it and/or
@@ -17,11 +17,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _TITLE_H_
-#define _TITLE_H_
+#ifndef _BG_H_
+#define _BG_H_
 
-#include <stdbool.h>
+#include <stdint.h>
 
-extern void ToTitleScreen(void);
+#include "game.h"
 
-#endif /* !defined(_TITLE_H_) */
+#define BG_PIECE_COUNT  8
+
+#define BG_SPEED_1     (-FIELD_SCROLL * 1 / 6)
+#define BG_SPEED_2     (-FIELD_SCROLL * 2 / 6)
+#define BG_SPEED_3     (-FIELD_SCROLL * 3 / 6)
+#define BG_SPEED_4     (-FIELD_SCROLL * 4 / 6)
+#define BG_SPEED_5     (-FIELD_SCROLL * 5 / 6)
+
+extern void AdvanceBackground(uint32_t Milliseconds);
+extern void DrawBackground(void);
+
+#endif /* !defined(_BG_H_) */

@@ -17,10 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef _INIT_H_
+#define _INIT_H_
+
 #include <stdbool.h>
 
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
 
 void Initialize(bool* Continue, bool* Error);
-void Finalize();
+void Finalize(void);
+
+#endif /* !defined(_INIT_H_) */

@@ -17,17 +17,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef _MAIN_H_
+#define _MAIN_H_
+
 #include <stdbool.h>
 #include "SDL.h"
 
 typedef void (*TGatherInput) (bool* Continue);
-typedef void (*TDoLogic) (bool* Continue, bool* Error);
+typedef void (*TDoLogic) (bool* Continue, bool* Error, Uint32 Milliseconds);
 typedef void (*TOutputFrame) (void);
 
 extern SDL_Surface* Screen;
-extern SDL_Surface* frames_bg;
-extern SDL_Surface* frames_player;
-extern SDL_Surface* frames_columns;
+extern SDL_Surface* BackgroundImage;
+extern SDL_Surface* CharacterFrames;
+extern SDL_Surface* ColumnImage;
 extern TGatherInput GatherInput;
 extern TDoLogic     DoLogic;
 extern TOutputFrame OutputFrame;
+
+#endif /* !defined(_MAIN_H_) */

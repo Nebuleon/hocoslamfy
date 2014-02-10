@@ -30,9 +30,9 @@ static bool         Continue            = true;
 static bool         Error               = false;
 
        SDL_Surface* Screen              = NULL;
-	   SDL_Surface* frames_bg           = NULL;
-	   SDL_Surface* frames_player       = NULL;
-	   SDL_Surface* frames_columns       = NULL;
+       SDL_Surface* BackgroundImage     = NULL;
+       SDL_Surface* CharacterFrames     = NULL;
+       SDL_Surface* ColumnImage         = NULL;
 
        TGatherInput GatherInput;
        TDoLogic     DoLogic;
@@ -41,14 +41,18 @@ static bool         Error               = false;
 int main(int argc, char* argv[])
 {
 	Initialize(&Continue, &Error);
-	frames_bg = IMG_Load("bg.png");
-	frames_player = IMG_Load("player.png");
-	frames_columns = IMG_Load("column.png");
+	Uint32 Ticks = SDL_GetTicks();
+	Uint32 Duration = 0;
 	while (Continue)
 	{
-		GatherInput(&Continue);
-		DoLogic(&Continue, &Error);
+		DoLogic(&Continue, &Error, Duration);
 		OutputFrame();
+		SDL_Delay(8);
+		GatherInput(&Continue);
+
+		Uint32 NewTicks = SDL_GetTicks();
+		Duration = NewTicks - Ticks;
+		Ticks = NewTicks;
 	}
 	Finalize();
 	return Error ? 1 : 0;

@@ -17,7 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "init.h"
+#ifndef _GAME_H_
+#define _GAME_H_
 
 // All speed and acceleration modifiers follow the same directions.
 // Vertically: Positive values go upward, and negative values go downward.
@@ -25,42 +26,49 @@
 
 // The vertical boost given to speed whenever a boost key or button is pressed.
 // Given in meters per second (m/s).
-#define SPEED_BOOST     3.53f
+#define SPEED_BOOST      2.72f
 
 // The gravitational force exerted by the bottom of the screen.
 // Given in (meters per second) per second (m/s^2).
-#define GRAVITY        -9.78f /* like Earth */
+#define GRAVITY         -9.78f /* like Earth */
 
 // The speed at which the screen scrolls.
 // Given in meters per second (m/s).
-#define FIELD_SCROLL   -2.00f
+#define FIELD_SCROLL    -2.00f
 
 // The distance between the edges of two successive rectangles to begin with.
 // Given in meters.
-#define RECT_GEN_START 92.71f
+#define RECT_GEN_START   2.00f
 
 // The change in distance between the edges of two successive rectangles as
 // the player passes through each of them.
 // Given in meters (per rectangle).
-#define RECT_GEN_SPEED -0.41f
+#define RECT_GEN_SPEED  -0.01f
 
 // The width of each rectangle.
 // Given in meters.
-#define RECT_WIDTH     25.00f
+#define RECT_WIDTH       0.42f
 
 // The height of the area to leave empty for the player to pass through.
 // Given in meters.
-#define GAP_HEIGHT     78.75f
+#define GAP_HEIGHT       1.00f
 
 // The width and height of the player's character.
 // Given in meters.
-#define PLAYER_SIZE    14.00f
+#define PLAYER_SIZE      0.26f
+
+// The time between animation frames for the player's character when ascending.
+// Given in milliseconds.
+#define ANIMATION_TIME  50
+
+// The number of animation frames for the player's character when ascending.
+#define ANIMATION_FRAMES 2
 
 // The height of the playing field.
 // Given in meters.
-#define FIELD_HEIGHT  240.00f
+#define FIELD_HEIGHT     4.00f
 
-#define FIELD_WIDTH   (SCREEN_WIDTH * (FIELD_HEIGHT / SCREEN_HEIGHT))
+#define FIELD_WIDTH    (SCREEN_WIDTH * (FIELD_HEIGHT / SCREEN_HEIGHT))
 
 struct HocoslamfyRect
 {
@@ -68,6 +76,9 @@ struct HocoslamfyRect
 	float Top;
 	float Right;
 	float Bottom;
+	bool  Passed;
 };
 
 extern void ToGame(void);
+
+#endif /* !defined(_GAME_H_) */
