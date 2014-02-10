@@ -37,7 +37,7 @@ static int BGCounterB = 0;
 static int BGCounterC = 0;
 static int BGCounterD = 0;
 static int BGCounterE = 0;
-
+static int ColCounter = 0;
 static int CounterB = 0;
 static int CounterC = 0;
 static int CounterD = 0;
@@ -341,7 +341,18 @@ void GameOutputFrame()
 			.w = (int) ((Rectangles[i].Right - Rectangles[i].Left) * SCREEN_WIDTH / FIELD_WIDTH),
 			.h = (int) ((Rectangles[i].Top - Rectangles[i].Bottom) * SCREEN_HEIGHT / FIELD_HEIGHT)
 		};
-		SDL_FillRect(Screen, &RectPixels, SDL_MapRGB(Screen->format, 128, 128, 128));
+		SDL_Rect ColRect;
+		if (ColCounter < 1) {
+			ColRect.y=240-RectPixels.h;
+			ColCounter++;
+		} else {
+			ColRect.y=0;
+			ColCounter = 0;
+		}
+			ColRect.x=0;
+			ColRect.w=RectPixels.w;
+			ColRect.h=RectPixels.h;
+		SDL_BlitSurface(frames_columns, &ColRect, Screen, &RectPixels);
 	}
 
 	// Draw the character.

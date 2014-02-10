@@ -32,6 +32,7 @@ static bool         Error               = false;
        SDL_Surface* Screen              = NULL;
 	   SDL_Surface* frames_bg           = NULL;
 	   SDL_Surface* frames_player       = NULL;
+	   SDL_Surface* frames_columns       = NULL;
 
        TGatherInput GatherInput;
        TDoLogic     DoLogic;
@@ -42,6 +43,7 @@ int main(int argc, char* argv[])
 	Initialize(&Continue, &Error);
 	frames_bg = IMG_Load("bg.png");
 	frames_player = IMG_Load("player.png");
+	frames_columns = IMG_Load("column.png");
 	while (Continue)
 	{
 		GatherInput(&Continue);
