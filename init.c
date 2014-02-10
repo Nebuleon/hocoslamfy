@@ -54,6 +54,24 @@ static bool CheckImage(bool* Continue, bool* Error, const SDL_Surface* Image, co
 	}
 }
 
+static SDL_Surface* ConvertSurface(bool* Continue, bool* Error, SDL_Surface* Source, const char* Name)
+{
+	SDL_Surface* Dest = SDL_DisplayFormatAlpha(Source);
+	if (Dest == NULL)
+	{
+		*Continue = false;  *Error = true;
+		printf("%s: SDL_ConvertSurface failed: %s\n", Name, SDL_GetError());
+		SDL_ClearError();
+		return NULL;
+	}
+	else
+	{
+		printf("Successfully converted %s to the screen's pixel format\n", Name);
+		SDL_FreeSurface(Source);
+		return Dest;
+	}
+}
+
 void Initialize(bool* Continue, bool* Error)
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
@@ -92,12 +110,18 @@ void Initialize(bool* Continue, bool* Error)
 		BackgroundImages[i] = IMG_Load(BackgroundImageNames[i]);
 		if (!CheckImage(Continue, Error, BackgroundImages[i], BackgroundImageNames[i]))
 			return;
+		if ((BackgroundImages[i] = ConvertSurface(Continue, Error, BackgroundImages[i], BackgroundImageNames[i])) == NULL)
+			return;
 	}
 	CharacterFrames = IMG_Load("player.png");
 	if (!CheckImage(Continue, Error, CharacterFrames, "player.png"))
 		return;
+	if ((CharacterFrames = ConvertSurface(Continue, Error, CharacterFrames, "player.png")) == NULL)
+		return;
 	ColumnImage = IMG_Load("column.png");
 	if (!CheckImage(Continue, Error, ColumnImage, "column.png"))
+		return;
+	if ((ColumnImage = ConvertSurface(Continue, Error, ColumnImage, "column.png")) == NULL)
 		return;
 
 	InitializePlatform();
