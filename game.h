@@ -26,7 +26,7 @@
 
 // The vertical boost given to speed whenever a boost key or button is pressed.
 // Given in meters per second (m/s).
-#define SPEED_BOOST      2.72f
+#define SPEED_BOOST      3.41f
 
 // The gravitational force exerted by the bottom of the screen.
 // Given in (meters per second) per second (m/s^2).
@@ -51,7 +51,7 @@
 
 // The height of the area to leave empty for the player to pass through.
 // Given in meters.
-#define GAP_HEIGHT       1.00f
+#define GAP_HEIGHT       1.33f
 
 // The width and height of the player's character.
 // Given in meters.
