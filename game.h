@@ -54,7 +54,7 @@
 
 // The width and height of the player's character.
 // Given in meters.
-#define PLAYER_SIZE    10.00f
+#define PLAYER_SIZE    14.00f
 
 // The height of the playing field.
 // Given in meters.

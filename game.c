@@ -30,6 +30,18 @@
 #include "game.h"
 #include "score.h"
 #include "text.h"
+#include "SDL_image.h"
+
+static int BGCounterA = 0;
+static int BGCounterB = 0;
+static int BGCounterC = 0;
+static int BGCounterD = 0;
+static int BGCounterE = 0;
+
+static int CounterB = 0;
+static int CounterC = 0;
+static int CounterD = 0;
+static int CounterE = 0;
 
 static uint32_t               Score;
 
@@ -38,6 +50,7 @@ static bool                   Pause;
 
 // Where the player is. (Upper-left corner, meters.)
 static float                  PlayerY;
+static float                  PlayerX = 64.0f;
 // Where the player is going. (Meters per second.)
 static float                  PlayerSpeed;
 
@@ -91,6 +104,9 @@ void GameDoLogic(bool* Continue, bool* Error)
 			{
 				RectangleCount--;
 				memmove(&Rectangles[i], &Rectangles[i + 1], RectangleCount * sizeof(struct HocoslamfyRect));
+			}
+			if ((Rectangles[i].Right < PlayerX) && (Rectangles[i].Right > (PlayerX + FIELD_SCROLL)))
+			{
 				if (!PointAwarded)
 				{
 					Score++;
@@ -148,10 +164,10 @@ void GameDoLogic(bool* Continue, bool* Error)
 			   && PlayerY               < Rectangles[i].Top)
 			  || (PlayerY - PLAYER_SIZE > Rectangles[i].Bottom
 			   && PlayerY - PLAYER_SIZE < Rectangles[i].Top))
-			 && ((0.0f                  > Rectangles[i].Left
-			   && 0.0f                  < Rectangles[i].Right)
-			  || (PLAYER_SIZE           > Rectangles[i].Left
-			   && PLAYER_SIZE           < Rectangles[i].Right)))
+			 && ((PlayerX               > Rectangles[i].Left
+			   && PlayerX               < Rectangles[i].Right)
+			  || (PlayerX + PLAYER_SIZE > Rectangles[i].Left
+			   && PlayerX + PLAYER_SIZE < Rectangles[i].Right)))
 			{
 				ToScore(Score, RECTANGLE_COLLISION);
 				return;
@@ -162,7 +178,158 @@ void GameDoLogic(bool* Continue, bool* Error)
 
 void GameOutputFrame()
 {
-	SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 0, 0, 0));
+	//Draw the background E.
+	SDL_Rect BGRectE;
+			BGRectE.x=BGCounterE;
+			BGRectE.y=54;
+			BGRectE.w=320;
+			BGRectE.h=138;
+	SDL_Rect BGRectEdst;
+			BGRectEdst.x=0;
+			BGRectEdst.y=54;
+			BGRectEdst.w=320;
+			BGRectEdst.h=138;
+	if (!Pause) {
+		if (CounterE < 4) {
+			CounterE++;
+		} else {
+			CounterE = 0;
+			if (BGCounterE < 160) {
+				BGCounterE++;
+			} else {
+				BGCounterE = 0;
+			}
+		}
+	}
+	SDL_BlitSurface(frames_bg, &BGRectE, Screen, &BGRectEdst);
+	
+	//Draw the background D.
+	SDL_Rect BGRectD;
+			BGRectD.x=BGCounterD;
+			BGRectD.y=192;
+			BGRectD.w=320;
+			BGRectD.h=8;
+	SDL_Rect BGRectDdst;
+			BGRectDdst.x=0;
+			BGRectDdst.y=192;
+			BGRectDdst.w=320;
+			BGRectDdst.h=8;
+	if (!Pause) {
+		if (CounterD < 3) {
+			CounterD++;
+		} else {
+			CounterD = 0;
+			if (BGCounterD < 160) {
+				BGCounterD++;
+			} else {
+				BGCounterD = 0;
+			}
+		}
+	}
+	SDL_BlitSurface(frames_bg, &BGRectD, Screen, &BGRectDdst);
+	
+	//Draw the background C.
+	SDL_Rect BGRectC;
+			BGRectC.x=BGCounterC;
+			BGRectC.y=42;
+			BGRectC.w=320;
+			BGRectC.h=12;
+	SDL_Rect BGRectCdst;
+			BGRectCdst.x=0;
+			BGRectCdst.y=42;
+			BGRectCdst.w=320;
+			BGRectCdst.h=12;
+	SDL_Rect BGRectC2;
+			BGRectC2.x=BGCounterC;
+			BGRectC2.y=200;
+			BGRectC2.w=320;
+			BGRectC2.h=10;
+	SDL_Rect BGRectC2dst;
+			BGRectC2dst.x=0;
+			BGRectC2dst.y=200;
+			BGRectC2dst.w=320;
+			BGRectC2dst.h=10;
+	if (!Pause) {
+		if (CounterC < 2) {
+			CounterC++;
+		} else {
+			CounterC = 0;
+			if (BGCounterC < 160) {
+				BGCounterC++;
+			} else {
+				BGCounterC = 0;
+			}
+		}
+	}
+	SDL_BlitSurface(frames_bg, &BGRectC, Screen, &BGRectCdst);
+	SDL_BlitSurface(frames_bg, &BGRectC2, Screen, &BGRectC2dst);
+	
+	//Draw the background B.
+	SDL_Rect BGRectB;
+			BGRectB.x=BGCounterB;
+			BGRectB.y=28;
+			BGRectB.w=320;
+			BGRectB.h=14;
+	SDL_Rect BGRectBdst;
+			BGRectBdst.x=0;
+			BGRectBdst.y=28;
+			BGRectBdst.w=320;
+			BGRectBdst.h=14;
+	SDL_Rect BGRectB2;
+			BGRectB2.x=BGCounterB;
+			BGRectB2.y=210;
+			BGRectB2.w=320;
+			BGRectB2.h=12;
+	SDL_Rect BGRectB2dst;
+			BGRectB2dst.x=0;
+			BGRectB2dst.y=210;
+			BGRectB2dst.w=320;
+			BGRectB2dst.h=12;
+	if (!Pause) {
+		if (CounterB < 1) {
+			CounterB++;
+		} else {
+			CounterB = 0;
+			if (BGCounterB < 160) {
+				BGCounterB++;
+			} else {
+				BGCounterB = 0;
+			}
+		}
+	}
+	SDL_BlitSurface(frames_bg, &BGRectB, Screen, &BGRectBdst);
+	SDL_BlitSurface(frames_bg, &BGRectB2, Screen, &BGRectB2dst);
+	
+	//Draw the background A.
+	SDL_Rect BGRectA;
+			BGRectA.x=BGCounterA;
+			BGRectA.y=0;
+			BGRectA.w=320;
+			BGRectA.h=28;
+	SDL_Rect BGRectAdst;
+			BGRectAdst.x=0;
+			BGRectAdst.y=0;
+			BGRectAdst.w=320;
+			BGRectAdst.h=28;
+	SDL_Rect BGRectA2;
+			BGRectA2.x=BGCounterA;
+			BGRectA2.y=222;
+			BGRectA2.w=320;
+			BGRectA2.h=18;
+	SDL_Rect BGRectA2dst;
+			BGRectA2dst.x=0;
+			BGRectA2dst.y=222;
+			BGRectA2dst.w=320;
+			BGRectA2dst.h=18;
+	if (!Pause) {
+		if (BGCounterA < 160) {
+			BGCounterA++;
+		} else {
+			BGCounterA = 0;
+		}
+	}
+	SDL_BlitSurface(frames_bg, &BGRectA, Screen, &BGRectAdst);
+	SDL_BlitSurface(frames_bg, &BGRectA2, Screen, &BGRectA2dst);
 
 	// Draw the rectangles.
 	uint32_t i;
@@ -179,12 +346,29 @@ void GameOutputFrame()
 
 	// Draw the character.
 	SDL_Rect PlayerPixels = {
-		.x = 0,
-		.y = SCREEN_HEIGHT - (PlayerY * SCREEN_HEIGHT / FIELD_HEIGHT),
-		.w = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT),
-		.h = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT)
+		.x = (PlayerX - 1),
+		.y = (SCREEN_HEIGHT - (PlayerY * SCREEN_HEIGHT / FIELD_HEIGHT) -1),
+		.w = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT) +2,
+		.h = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT) +2
 	};
-	SDL_FillRect(Screen, &PlayerPixels, SDL_MapRGB(Screen->format, 255, 255, 255));
+	SDL_Rect P1Rect;
+			P1Rect.x=0;
+			P1Rect.y=0;
+			P1Rect.w=16;
+			P1Rect.h=16;
+	if (CounterB < 1) {
+		P1Rect.x=16;
+	} else {
+		P1Rect.x=0;
+	}
+	if ((PlayerSpeed < 0.0f) && (PlayerSpeed > -1.0f)) {
+		P1Rect.x=32;
+	}
+	if (PlayerSpeed < -1.0f) {
+		P1Rect.x=48;
+	}
+	SDL_BlitSurface(frames_player, &P1Rect, Screen, &PlayerPixels);
+	
 
 	// Draw the player's current score.
 	char ScoreString[17];
