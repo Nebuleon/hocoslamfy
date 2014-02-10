@@ -75,6 +75,9 @@ void GameGatherInput(bool* Continue)
 					return;
 				}
 				break;
+			case SDL_QUIT:
+				*Continue = false;
+				break;
 			default:
 				break;
 		}

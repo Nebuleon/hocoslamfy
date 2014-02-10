@@ -64,6 +64,9 @@ void ScoreGatherInput(bool* Continue)
 					return;
 				}
 				break;
+			case SDL_QUIT:
+				*Continue = false;
+				break;
 			default:
 				break;
 		}
