@@ -55,7 +55,7 @@ void Initialize(bool* Continue, bool* Error)
 	else
 		printf("SDL initialisation succeeded\n");
 
-	Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_HWSURFACE |
+	Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE |
 #ifdef SDL_TRIPLEBUF
 		SDL_TRIPLEBUF
 #else

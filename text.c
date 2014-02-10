@@ -91,7 +91,7 @@ uint32_t GetSectionRenderedWidth(const char* String, const uint32_t Start, const
 	return Result;
 }
 
-void PrintString(const char* String, uint16_t TextColor,
+void PrintString16(const char* String, uint16_t TextColor,
 	void* Dest, uint32_t DestPitch, uint32_t X, uint32_t Y, uint32_t Width, uint32_t Height,
 	enum HorizontalAlignment HorizontalAlignment, enum VerticalAlignment VerticalAlignment)
 {
@@ -152,6 +152,67 @@ void PrintString(const char* String, uint16_t TextColor,
 	free(Cuts);
 }
 
+void PrintString32(const char* String, uint32_t TextColor,
+	void* Dest, uint32_t DestPitch, uint32_t X, uint32_t Y, uint32_t Width, uint32_t Height,
+	enum HorizontalAlignment HorizontalAlignment, enum VerticalAlignment VerticalAlignment)
+{
+	struct StringCut* Cuts = malloc((Height / _font_height) * sizeof(struct StringCut));
+	uint32_t CutCount = CutString(String, Width, Cuts, Height / _font_height), Cut;
+	if (CutCount > Height / _font_height)
+		CutCount = Height / _font_height;
+
+	for (Cut = 0; Cut < CutCount; Cut++)
+	{
+		uint32_t TextWidth = GetSectionRenderedWidth(String, Cuts[Cut].Start, Cuts[Cut].End);
+		uint32_t LineX, LineY;
+		switch (HorizontalAlignment)
+		{
+			case LEFT:   LineX = X;                           break;
+			case CENTER: LineX = X + (Width - TextWidth) / 2; break;
+			case RIGHT:  LineX = (X + Width) - TextWidth;     break;
+			default:     LineX = 0; /* shouldn't happen */    break;
+		}
+		switch (VerticalAlignment)
+		{
+			case TOP:
+				LineY = Y + Cut * _font_height;
+				break;
+			case MIDDLE:
+				LineY = Y + (Height - CutCount * _font_height) / 2 + Cut * _font_height;
+				break;
+			case BOTTOM:
+				LineY = (Y + Height) - (CutCount - Cut) * _font_height;
+				break;
+			default:
+				LineY = 0; /* shouldn't happen */
+				break;
+		}
+
+		uint32_t Cur;
+		for (Cur = Cuts[Cut].Start; Cur < Cuts[Cut].End; Cur++)
+		{
+			uint32_t glyph_offset = (uint32_t) String[Cur] * _font_height;
+			uint32_t glyph_width = _font_width[(uint8_t) String[Cur]];
+			uint32_t glyph_column, glyph_row;
+			uint16_t current_halfword;
+
+			for(glyph_row = 0; glyph_row < _font_height; glyph_row++, glyph_offset++)
+			{
+				current_halfword = _font_bits[glyph_offset];
+				for (glyph_column = 0; glyph_column < glyph_width; glyph_column++)
+				{
+					if ((current_halfword >> (15 - glyph_column)) & 0x01)
+						*(uint32_t*) ((uint8_t*) Dest + (LineY + glyph_row) * DestPitch + (LineX + glyph_column) * sizeof(uint32_t)) = TextColor;
+				}
+			}
+
+			LineX += glyph_width;
+		}
+	}
+
+	free(Cuts);
+}
+
 uint32_t GetRenderedWidth(const char* str)
 {
 	struct StringCut* Cuts = malloc(sizeof(struct StringCut));
@@ -185,7 +246,7 @@ uint32_t GetRenderedHeight(const char* str)
 	return CutString(str, UINT32_MAX, NULL, 0) * _font_height;
 }
 
-void PrintStringOutline(const char* String, uint16_t TextColor, uint16_t OutlineColor,
+void PrintStringOutline16(const char* String, uint16_t TextColor, uint16_t OutlineColor,
 	void* Dest, uint32_t DestPitch, uint32_t X, uint32_t Y, uint32_t Width, uint32_t Height,
 	enum HorizontalAlignment HorizontalAlignment, enum VerticalAlignment VerticalAlignment)
 {
@@ -193,7 +254,19 @@ void PrintStringOutline(const char* String, uint16_t TextColor, uint16_t Outline
 	for (sx = 0; sx <= 2; sx++)
 		for (sy = 0; sy <= 2; sy++)
 			if (!(sx == 1 && sy == 1))
-				PrintString(String, OutlineColor, Dest, DestPitch, X + sx, Y + sy, Width - 2, Height - 2, HorizontalAlignment, VerticalAlignment);
-	PrintString(String, TextColor, Dest, DestPitch, X + 1, Y + 1, Width - 2, Height - 2, HorizontalAlignment, VerticalAlignment);
+				PrintString16(String, OutlineColor, Dest, DestPitch, X + sx, Y + sy, Width - 2, Height - 2, HorizontalAlignment, VerticalAlignment);
+	PrintString16(String, TextColor, Dest, DestPitch, X + 1, Y + 1, Width - 2, Height - 2, HorizontalAlignment, VerticalAlignment);
+}
+
+void PrintStringOutline32(const char* String, uint32_t TextColor, uint32_t OutlineColor,
+	void* Dest, uint32_t DestPitch, uint32_t X, uint32_t Y, uint32_t Width, uint32_t Height,
+	enum HorizontalAlignment HorizontalAlignment, enum VerticalAlignment VerticalAlignment)
+{
+	uint32_t sx, sy;
+	for (sx = 0; sx <= 2; sx++)
+		for (sy = 0; sy <= 2; sy++)
+			if (!(sx == 1 && sy == 1))
+				PrintString32(String, OutlineColor, Dest, DestPitch, X + sx, Y + sy, Width - 2, Height - 2, HorizontalAlignment, VerticalAlignment);
+	PrintString32(String, TextColor, Dest, DestPitch, X + 1, Y + 1, Width - 2, Height - 2, HorizontalAlignment, VerticalAlignment);
 }
 

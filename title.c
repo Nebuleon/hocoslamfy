@@ -77,7 +77,7 @@ void TitleScreenOutputFrame()
 
 	if (SDL_MUSTLOCK(Screen))
 		SDL_LockSurface(Screen);
-	PrintStringOutline(WelcomeMessage,
+	PrintStringOutline32(WelcomeMessage,
 		SDL_MapRGB(Screen->format, 255, 255, 255),
 		SDL_MapRGB(Screen->format, 0, 0, 0),
 		Screen->pixels,
