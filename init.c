@@ -56,7 +56,11 @@ static bool CheckImage(bool* Continue, bool* Error, const SDL_Surface* Image, co
 
 static SDL_Surface* ConvertSurface(bool* Continue, bool* Error, SDL_Surface* Source, const char* Name)
 {
-	SDL_Surface* Dest = SDL_DisplayFormatAlpha(Source);
+	SDL_Surface* Dest;
+	if (Source->format->Amask != 0)
+		Dest = SDL_DisplayFormatAlpha(Source);
+	else
+		Dest = SDL_DisplayFormat(Source);
 	if (Dest == NULL)
 	{
 		*Continue = false;  *Error = true;
