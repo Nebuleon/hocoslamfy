@@ -266,7 +266,7 @@ void GameOutputFrame()
 	switch (PlayerStatus)
 	{
 		case ALIVE:
-			if (PlayerSpeed > -1.0f)
+			if (PlayerSpeed > -2.0f)
 				PlayerSourceRect.x = 32 * PlayerFrame;
 			else
 				PlayerSourceRect.x = 64 + 32 * PlayerFrame;
