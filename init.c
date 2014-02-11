@@ -113,10 +113,15 @@ void Initialize(bool* Continue, bool* Error)
 		if ((BackgroundImages[i] = ConvertSurface(Continue, Error, BackgroundImages[i], BackgroundImageNames[i])) == NULL)
 			return;
 	}
-	CharacterFrames = IMG_Load("player.png");
-	if (!CheckImage(Continue, Error, CharacterFrames, "player.png"))
+	CharacterFrames = IMG_Load("Bee.png");
+	if (!CheckImage(Continue, Error, CharacterFrames, "Bee.png"))
 		return;
-	if ((CharacterFrames = ConvertSurface(Continue, Error, CharacterFrames, "player.png")) == NULL)
+	if ((CharacterFrames = ConvertSurface(Continue, Error, CharacterFrames, "Bee.png")) == NULL)
+		return;
+	CollisionImage = IMG_Load("Crash.png");
+	if (!CheckImage(Continue, Error, CollisionImage, "Crash.png"))
+		return;
+	if ((CollisionImage = ConvertSurface(Continue, Error, CollisionImage, "Crash.png")) == NULL)
 		return;
 	ColumnImage = IMG_Load("column.png");
 	if (!CheckImage(Continue, Error, ColumnImage, "column.png"))

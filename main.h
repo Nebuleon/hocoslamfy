@@ -33,6 +33,7 @@ extern SDL_Surface* Screen;
 extern SDL_Surface* BackgroundImages[BG_LAYER_COUNT];
 extern SDL_Surface* CharacterFrames;
 extern SDL_Surface* ColumnImage;
+extern SDL_Surface* CollisionImage;
 extern TGatherInput GatherInput;
 extern TDoLogic     DoLogic;
 extern TOutputFrame OutputFrame;

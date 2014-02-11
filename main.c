@@ -34,6 +34,7 @@ static bool         Error                            = false;
        SDL_Surface* BackgroundImages[BG_LAYER_COUNT] = { NULL };
        SDL_Surface* CharacterFrames                  = NULL;
        SDL_Surface* ColumnImage                      = NULL;
+       SDL_Surface* CollisionImage                   = NULL;
 
        TGatherInput GatherInput;
        TDoLogic     DoLogic;

@@ -55,14 +55,19 @@
 
 // The width and height of the player's character.
 // Given in meters.
-#define PLAYER_SIZE      0.26f
+#define PLAYER_SIZE      0.37f
 
-// The time between animation frames for the player's character when ascending.
+// The time between animation frames for the player's character when ascending
+// or descending.
 // Given in milliseconds.
 #define ANIMATION_TIME  50
 
 // The number of animation frames for the player's character when ascending.
 #define ANIMATION_FRAMES 2
+
+// The time the collision frame should be displayed upon death.
+// Given in milliseconds.
+#define COLLISION_TIME 200
 
 // The height of the playing field.
 // Given in meters.
@@ -77,6 +82,13 @@ struct HocoslamfyRect
 	float Right;
 	float Bottom;
 	bool  Passed;
+};
+
+enum PlayerStatus
+{
+	ALIVE,
+	COLLIDED,
+	DYING
 };
 
 extern void ToGame(void);

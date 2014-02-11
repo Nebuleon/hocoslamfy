@@ -38,6 +38,7 @@ static uint32_t               Score;
 
 static bool                   Boost;
 static bool                   Pause;
+static enum PlayerStatus      PlayerStatus;
 
 // Where the player is. (Upper-left corner, meters.)
 static float                  PlayerX;
@@ -48,6 +49,9 @@ static float                  PlayerSpeed;
 static uint8_t                PlayerFrame;
 // Time the player has had the current animation frame. (In milliseconds.)
 static uint32_t               PlayerFrameTime;
+
+// Passed to the score screen after the player is done dying.
+static enum GameOverReason    GameOverReason;
 
 // What the player avoids.
 static struct HocoslamfyRect* Rectangles     = NULL;
@@ -61,9 +65,9 @@ void GameGatherInput(bool* Continue)
 
 	while (SDL_PollEvent(&ev))
 	{
-		if (IsBoostEvent(&ev))
+		if (IsBoostEvent(&ev) && !Pause)
 			Boost = true;
-		else if (IsPauseEvent(&ev))
+		else if (IsPauseEvent(&ev) && PlayerStatus == ALIVE)
 			Pause = !Pause;
 		else if (IsExitGameEvent(&ev))
 		{
@@ -73,15 +77,35 @@ void GameGatherInput(bool* Continue)
 	}
 }
 
+static void SetStatus(const enum PlayerStatus NewStatus)
+{
+	PlayerFrameTime = 0;
+	PlayerStatus = NewStatus;
+	if (NewStatus == DYING)
+		PlayerSpeed = 0.0f;
+}
+
 static void AnimationControl(Uint32 Milliseconds)
 {
-	PlayerFrameTime = (PlayerFrameTime + Milliseconds) % (ANIMATION_TIME * ANIMATION_FRAMES);
-	PlayerFrame = (PlayerFrame + (PlayerFrameTime / ANIMATION_TIME)) % ANIMATION_FRAMES;
+	switch (PlayerStatus)
+	{
+		case ALIVE:
+		case DYING:
+			PlayerFrameTime = (PlayerFrameTime + Milliseconds) % (ANIMATION_TIME * ANIMATION_FRAMES);
+			PlayerFrame = (PlayerFrame + (PlayerFrameTime / ANIMATION_TIME)) % ANIMATION_FRAMES;
+			break;
+
+		case COLLIDED:
+			PlayerFrameTime += Milliseconds;
+			if (PlayerFrameTime > COLLISION_TIME)
+				SetStatus(DYING);
+			break;
+	}
 }
 
 void GameDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 {
-	if (!Pause)
+	if (!Pause && PlayerStatus == ALIVE)
 	{
 		bool PointAwarded = false;
 		uint32_t Millisecond;
@@ -153,8 +177,9 @@ void GameDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 			PlayerY += PlayerSpeed / 1000;
 			if (PlayerY > FIELD_HEIGHT || PlayerY - PLAYER_SIZE < 0.0f)
 			{
-				ToScore(Score, FIELD_BORDER_COLLISION);
-				return;
+				SetStatus(COLLIDED);
+				GameOverReason = FIELD_BORDER_COLLISION;
+				break;
 			}
 			// Collision detection.
 			for (i = 0; i < RectangleCount; i++)
@@ -168,16 +193,35 @@ void GameDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 				  || (PlayerX + PLAYER_SIZE > Rectangles[i].Left
 				   && PlayerX + PLAYER_SIZE < Rectangles[i].Right)))
 				{
-					ToScore(Score, RECTANGLE_COLLISION);
-					return;
+					SetStatus(COLLIDED);
+					GameOverReason = RECTANGLE_COLLISION;
+					break;
 				}
 			}
 		}
 
 		AdvanceBackground(Milliseconds);
-
-		AnimationControl(Milliseconds);
 	}
+	else if (PlayerStatus == DYING)
+	{
+		uint32_t Millisecond;
+		for (Millisecond = 0; Millisecond < Milliseconds; Millisecond++)
+		{
+			// Update the speed at which the player is going.
+			PlayerSpeed += GRAVITY / 1000;
+			// Update the player's position.
+			// If the player's position has reached the bottom of the screen,
+			// send him or her to the score screen.
+			PlayerY += PlayerSpeed / 1000;
+			if (PlayerY < 0.0f)
+			{
+				ToScore(Score, GameOverReason);
+				return;
+			}
+		}
+	}
+
+	AnimationControl(Milliseconds);
 }
 
 void GameOutputFrame()
@@ -208,25 +252,42 @@ void GameOutputFrame()
 
 	// Draw the character.
 	SDL_Rect PlayerDestRect = {
-		.x = (int) (PlayerX * SCREEN_WIDTH / FIELD_WIDTH),
-		.y = (int) (SCREEN_HEIGHT - (PlayerY * SCREEN_HEIGHT / FIELD_HEIGHT)),
-		.w = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT),
-		.h = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT)
+		.x = (int) (PlayerX * SCREEN_WIDTH / FIELD_WIDTH) - 5,
+		.y = (int) (SCREEN_HEIGHT - (PlayerY * SCREEN_HEIGHT / FIELD_HEIGHT)) - 5,
+		.w = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT) + 10,
+		.h = (int) (PLAYER_SIZE * SCREEN_HEIGHT / FIELD_HEIGHT) + 10
 	};
 	SDL_Rect PlayerSourceRect = {
 		.x = 0,
 		.y = 0,
-		.w = 16,
-		.h = 16
+		.w = 32,
+		.h = 32
 	};
-	PlayerSourceRect.x = 16 * PlayerFrame;
-	if ((PlayerSpeed < 0.0f) && (PlayerSpeed > -1.0f)) {
-		PlayerSourceRect.x = 32;
+	switch (PlayerStatus)
+	{
+		case ALIVE:
+			if (PlayerSpeed > 0.0f)
+				PlayerSourceRect.x = 32 * PlayerFrame;
+			else
+				PlayerSourceRect.x = 64 + 32 * PlayerFrame;
+			SDL_BlitSurface(CharacterFrames, &PlayerSourceRect, Screen, &PlayerDestRect);
+			break;
+
+		case COLLIDED:
+			PlayerSourceRect.w = 48;
+			PlayerSourceRect.h = 48;
+			PlayerDestRect.x -= 8;
+			PlayerDestRect.y -= 8;
+			PlayerDestRect.w += 16;
+			PlayerDestRect.h += 16;
+			SDL_BlitSurface(CollisionImage, &PlayerSourceRect, Screen, &PlayerDestRect);
+			break;
+
+		case DYING:
+			PlayerSourceRect.x = 128 + 32 * PlayerFrame;
+			SDL_BlitSurface(CharacterFrames, &PlayerSourceRect, Screen, &PlayerDestRect);
+			break;
 	}
-	else if (PlayerSpeed <= -1.0f) {
-		PlayerSourceRect.x = 48;
-	}
-	SDL_BlitSurface(CharacterFrames, &PlayerSourceRect, Screen, &PlayerDestRect);
 
 	// Draw the player's current score.
 	char ScoreString[17];
@@ -255,6 +316,7 @@ void ToGame(void)
 	Score = 0;
 	Boost = false;
 	Pause = false;
+	SetStatus(ALIVE);
 	PlayerX = FIELD_WIDTH / 8;
 	PlayerY = (FIELD_HEIGHT - PLAYER_SIZE) / 2;
 	PlayerSpeed = 0.0f;
