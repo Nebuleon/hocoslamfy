@@ -153,7 +153,7 @@ void GameDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 				Rectangles[RectangleCount - 2].Left = Rectangles[RectangleCount - 1].Left = Left;
 				Rectangles[RectangleCount - 2].Right = Rectangles[RectangleCount - 1].Right = Left + RECT_WIDTH;
 				// Where's the place for the player to go through?
-				float GapTop = GAP_HEIGHT + (FIELD_HEIGHT / 16.0f) + ((float) rand() / (float) RAND_MAX) * (FIELD_HEIGHT - GAP_HEIGHT - (FIELD_HEIGHT / 16.0f));
+				float GapTop = GAP_HEIGHT + (FIELD_HEIGHT / 16.0f) + ((float) rand() / (float) RAND_MAX) * (FIELD_HEIGHT - GAP_HEIGHT - (FIELD_HEIGHT / 8.0f));
 				Rectangles[RectangleCount - 2].Top = FIELD_HEIGHT;
 				Rectangles[RectangleCount - 2].Bottom = GapTop;
 				Rectangles[RectangleCount - 1].Top = GapTop - GAP_HEIGHT;
