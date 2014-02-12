@@ -65,6 +65,9 @@
 // The number of animation frames for the player's character when ascending.
 #define ANIMATION_FRAMES 2
 
+// The number of animation frames to wait for the player blinking animation.
+#define ANIMATION_FRAMES_BLINK 100
+
 // The time the collision frame should be displayed upon death.
 // Given in milliseconds.
 #define COLLISION_TIME 200

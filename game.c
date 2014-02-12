@@ -47,6 +47,8 @@ static float                  PlayerY;
 static float                  PlayerSpeed;
 // Animation frame for the player when ascending.
 static uint8_t                PlayerFrame;
+// Frame counter for triggering the player blinking animation.
+static uint8_t                PlayerFrameBlink;
 // Time the player has had the current animation frame. (In milliseconds.)
 static uint32_t               PlayerFrameTime;
 
@@ -93,6 +95,7 @@ static void AnimationControl(Uint32 Milliseconds)
 		case DYING:
 			PlayerFrameTime = (PlayerFrameTime + Milliseconds) % (ANIMATION_TIME * ANIMATION_FRAMES);
 			PlayerFrame = (PlayerFrame + (PlayerFrameTime / ANIMATION_TIME)) % ANIMATION_FRAMES;
+			PlayerFrameBlink = (PlayerFrameBlink + (PlayerFrameTime / ANIMATION_TIME)) % ANIMATION_FRAMES_BLINK;
 			break;
 
 		case COLLIDED:
@@ -153,7 +156,7 @@ void GameDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 				Rectangles[RectangleCount - 2].Left = Rectangles[RectangleCount - 1].Left = Left;
 				Rectangles[RectangleCount - 2].Right = Rectangles[RectangleCount - 1].Right = Left + RECT_WIDTH;
 				// Where's the place for the player to go through?
-				float GapTop = GAP_HEIGHT + 1.0f + ((float) rand() / (float) RAND_MAX) * (FIELD_HEIGHT - GAP_HEIGHT - 2.0f);
+				float GapTop = GAP_HEIGHT + (FIELD_HEIGHT / 16.0f) + ((float) rand() / (float) RAND_MAX) * (FIELD_HEIGHT - GAP_HEIGHT - (FIELD_HEIGHT / 8.0f));
 				Rectangles[RectangleCount - 2].Top = FIELD_HEIGHT;
 				Rectangles[RectangleCount - 2].Bottom = GapTop;
 				Rectangles[RectangleCount - 1].Top = GapTop - GAP_HEIGHT;
@@ -269,10 +272,15 @@ void GameOutputFrame()
 	switch (PlayerStatus)
 	{
 		case ALIVE:
-			if (PlayerSpeed > -2.0f)
+			if (PlayerSpeed > -2.0f) {
 				PlayerSourceRect.x = 32 * PlayerFrame;
-			else
-				PlayerSourceRect.x = 64 + 32 * PlayerFrame;
+				if (PlayerFrameBlink > 92)
+					PlayerSourceRect.x = 64 + 32 * PlayerFrame;
+			} else {
+				PlayerSourceRect.x = 128 + 32 * PlayerFrame;
+				if (PlayerFrameBlink > 92)
+					PlayerSourceRect.x = 192 + 32 * PlayerFrame;
+			}
 			SDL_BlitSurface(CharacterFrames, &PlayerSourceRect, Screen, &PlayerDestRect);
 			break;
 
@@ -287,7 +295,7 @@ void GameOutputFrame()
 			break;
 
 		case DYING:
-			PlayerSourceRect.x = 128 + 32 * PlayerFrame;
+			PlayerSourceRect.x = 256 + 32 * PlayerFrame;
 			SDL_BlitSurface(CharacterFrames, &PlayerSourceRect, Screen, &PlayerDestRect);
 			break;
 	}
