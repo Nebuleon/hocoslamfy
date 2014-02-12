@@ -82,6 +82,7 @@ struct HocoslamfyRect
 	float Right;
 	float Bottom;
 	bool  Passed;
+	int   Frame;
 };
 
 enum PlayerStatus

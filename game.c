@@ -158,6 +158,8 @@ void GameDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 				Rectangles[RectangleCount - 2].Bottom = GapTop;
 				Rectangles[RectangleCount - 1].Top = GapTop - GAP_HEIGHT;
 				Rectangles[RectangleCount - 1].Bottom = 0.0f;
+				Rectangles[RectangleCount - 2].Frame = rand() % 3;
+				Rectangles[RectangleCount - 1].Frame = rand() % 3;
 			}
 			// Update the speed at which the player is going.
 			PlayerSpeed += GRAVITY / 1000;
@@ -234,9 +236,9 @@ void GameOutputFrame()
 	for (i = 0; i < RectangleCount; i++)
 	{
 		SDL_Rect ColumnDestRect = {
-			.x = (int) (Rectangles[i].Left * SCREEN_WIDTH / FIELD_WIDTH),
+			.x = (int) (Rectangles[i].Left * SCREEN_WIDTH / FIELD_WIDTH) - 20,
 			.y = SCREEN_HEIGHT - (int) (Rectangles[i].Top * SCREEN_HEIGHT / FIELD_HEIGHT),
-			.w = (int) ((Rectangles[i].Right - Rectangles[i].Left) * SCREEN_WIDTH / FIELD_WIDTH),
+			.w = (int) ((Rectangles[i].Right - Rectangles[i].Left) * SCREEN_WIDTH / FIELD_WIDTH) + 40,
 			.h = (int) ((Rectangles[i].Top - Rectangles[i].Bottom) * SCREEN_HEIGHT / FIELD_HEIGHT)
 		};
 		SDL_Rect ColumnSourceRect = { .x = 0, .y = 0, .w = ColumnDestRect.w, .h = ColumnDestRect.h };
@@ -245,8 +247,9 @@ void GameOutputFrame()
 		if (i & 1) {
 			ColumnSourceRect.y = 0;
 		} else {
-			ColumnSourceRect.y = 240 - ColumnDestRect.h;
+			ColumnSourceRect.y = 480 - ColumnDestRect.h;
 		}
+		ColumnSourceRect.x = 64 * Rectangles[i].Frame;
 		SDL_BlitSurface(ColumnImage, &ColumnSourceRect, Screen, &ColumnDestRect);
 	}
 
