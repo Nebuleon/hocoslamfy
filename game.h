@@ -57,6 +57,17 @@
 // Given in meters.
 #define PLAYER_SIZE      0.37f
 
+// The width and height of the player's frame image.
+// Given in pixels.
+#define PLAYER_FRAME_SIZE      32
+
+// The width and height of the player's collision rectangles.
+// Given in meters.
+//Horizontal rectangle:
+#define PLAYER_COL_SIZE_A      0.36f
+//Vertical rectangle:
+#define PLAYER_COL_SIZE_B      0.32f
+
 // The time between animation frames for the player's character when ascending
 // or descending.
 // Given in milliseconds.
