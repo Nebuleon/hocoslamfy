@@ -53,9 +53,16 @@
 // Given in meters.
 #define GAP_HEIGHT       1.33f
 
-// The width and height of the player's character.
+// The width and height of the player's frame image.
+// Given in pixels.
+#define PLAYER_FRAME_SIZE      32
+
+// The width and height of the player's collision rectangles.
 // Given in meters.
-#define PLAYER_SIZE      0.37f
+//Horizontal rectangle:
+#define PLAYER_COL_SIZE_A      0.36f
+//Vertical rectangle:
+#define PLAYER_COL_SIZE_B      0.32f
 
 // The time between animation frames for the player's character when ascending
 // or descending.
@@ -64,6 +71,9 @@
 
 // The number of animation frames for the player's character when ascending.
 #define ANIMATION_FRAMES 2
+
+// The number of animation frames to wait for the player blinking animation.
+#define ANIMATION_FRAMES_BLINK 100
 
 // The time the collision frame should be displayed upon death.
 // Given in milliseconds.
@@ -82,6 +92,7 @@ struct HocoslamfyRect
 	float Right;
 	float Bottom;
 	bool  Passed;
+	int   Frame;
 };
 
 enum PlayerStatus

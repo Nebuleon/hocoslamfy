@@ -127,10 +127,10 @@ void Initialize(bool* Continue, bool* Error)
 		return;
 	if ((CollisionImage = ConvertSurface(Continue, Error, CollisionImage, "Crash.png")) == NULL)
 		return;
-	ColumnImage = IMG_Load("column.png");
-	if (!CheckImage(Continue, Error, ColumnImage, "column.png"))
+	ColumnImage = IMG_Load("Bamboo.png");
+	if (!CheckImage(Continue, Error, ColumnImage, "Bamboo.png"))
 		return;
-	if ((ColumnImage = ConvertSurface(Continue, Error, ColumnImage, "column.png")) == NULL)
+	if ((ColumnImage = ConvertSurface(Continue, Error, ColumnImage, "Bamboo.png")) == NULL)
 		return;
 
 	InitializePlatform();
