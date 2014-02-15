@@ -53,10 +53,6 @@
 // Given in meters.
 #define GAP_HEIGHT       1.33f
 
-// The width and height of the player's character.
-// Given in meters.
-#define PLAYER_SIZE      0.37f
-
 // The width and height of the player's frame image.
 // Given in pixels.
 #define PLAYER_FRAME_SIZE      32

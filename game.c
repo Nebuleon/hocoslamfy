@@ -355,7 +355,7 @@ void ToGame(void)
 	Pause = false;
 	SetStatus(ALIVE);
 	PlayerX = FIELD_WIDTH / 4;
-	PlayerY = (FIELD_HEIGHT - PLAYER_SIZE) / 2;
+	PlayerY = (FIELD_HEIGHT - PLAYER_COL_SIZE_B) / 2;
 	PlayerSpeed = 0.0f;
 	if (Rectangles != NULL)
 	{
