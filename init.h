@@ -25,6 +25,12 @@
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
 
+#ifdef OPK
+#define DATA_PATH "./"
+#else
+#define DATA_PATH "./data/"
+#endif
+
 void Initialize(bool* Continue, bool* Error);
 void Finalize(void);
 

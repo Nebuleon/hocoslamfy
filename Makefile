@@ -4,10 +4,12 @@ ifeq ($(TARGET), hocoslamfy-od)
   CC        := mipsel-linux-gcc
   STRIP     := mipsel-linux-strip
   OBJS       = platform/opendingux.o
+  DEFS      := -DOPK
 else
   CC        := gcc
   STRIP     := strip
   OBJS       = platform/general.o
+  DEFS      := 
 endif
 
 SYSROOT     := $(shell $(CC) --print-sysroot)
@@ -19,7 +21,7 @@ OBJS        += main.o init.o title.o game.o score.o bg.o text.o unifont.o
 HEADERS     += main.h init.h platform.h title.h game.h score.h bg.h text.h unifont.h
 
 INCLUDE     := -I.
-DEFS        :=
+DEFS        +=
 
 CFLAGS       = $(SDL_CFLAGS) -Wall -Wno-unused-variable \
                -O2 -fomit-frame-pointer $(DEFS) $(INCLUDE)

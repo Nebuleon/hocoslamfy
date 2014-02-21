@@ -39,12 +39,19 @@ static const char* BackgroundImageNames[BG_LAYER_COUNT] = {
 	"Grass1.png"
 };
 
+static SDL_Surface* LoadImage(const char* Path)
+{
+	char path[256];
+	snprintf(path, 256, DATA_PATH "%s", Path);
+	return IMG_Load(path);
+}
+
 static bool CheckImage(bool* Continue, bool* Error, const SDL_Surface* Image, const char* Name)
 {
 	if (Image == NULL)
 	{
 		*Continue = false;  *Error = true;
-		printf("%s: IMG_Load failed: %s\n", Name, IMG_GetError());
+		printf("%s: LoadImage failed: %s\n", Name, IMG_GetError());
 		return false;
 	}
 	else
@@ -84,9 +91,7 @@ void Initialize(bool* Continue, bool* Error)
 		printf("SDL initialisation failed: %s\n", SDL_GetError());
 		SDL_ClearError();
 		return;
-	}
-	else
-		printf("SDL initialisation succeeded\n");
+	} else printf("SDL initialisation succeeded\n");
 
 	Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE |
 #ifdef SDL_TRIPLEBUF
@@ -111,23 +116,23 @@ void Initialize(bool* Continue, bool* Error)
 	uint32_t i;
 	for (i = 0; i < BG_LAYER_COUNT; i++)
 	{
-		BackgroundImages[i] = IMG_Load(BackgroundImageNames[i]);
+		BackgroundImages[i] = LoadImage(BackgroundImageNames[i]);
 		if (!CheckImage(Continue, Error, BackgroundImages[i], BackgroundImageNames[i]))
 			return;
 		if ((BackgroundImages[i] = ConvertSurface(Continue, Error, BackgroundImages[i], BackgroundImageNames[i])) == NULL)
 			return;
 	}
-	CharacterFrames = IMG_Load("Bee.png");
+	CharacterFrames = LoadImage("Bee.png");
 	if (!CheckImage(Continue, Error, CharacterFrames, "Bee.png"))
 		return;
 	if ((CharacterFrames = ConvertSurface(Continue, Error, CharacterFrames, "Bee.png")) == NULL)
 		return;
-	CollisionImage = IMG_Load("Crash.png");
+	CollisionImage = LoadImage("Crash.png");
 	if (!CheckImage(Continue, Error, CollisionImage, "Crash.png"))
 		return;
 	if ((CollisionImage = ConvertSurface(Continue, Error, CollisionImage, "Crash.png")) == NULL)
 		return;
-	ColumnImage = IMG_Load("Bamboo.png");
+	ColumnImage = LoadImage("Bamboo.png");
 	if (!CheckImage(Continue, Error, ColumnImage, "Bamboo.png"))
 		return;
 	if ((ColumnImage = ConvertSurface(Continue, Error, ColumnImage, "Bamboo.png")) == NULL)
