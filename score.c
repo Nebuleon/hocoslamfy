@@ -109,10 +109,10 @@ void ToScore(uint32_t Score, enum GameOverReason GameOverReason)
 	switch (GameOverReason)
 	{
 		case FIELD_BORDER_COLLISION:
-			GameOverReasonString = "You crashed into the wall";
+			GameOverReasonString = "You flew too far away from the field";
 			break;
 		case RECTANGLE_COLLISION:
-			GameOverReasonString = "You crashed into an object";
+			GameOverReasonString = "You crashed into a bamboo shoot";
 			break;
 	}
 
