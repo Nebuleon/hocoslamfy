@@ -28,6 +28,8 @@ enum GameOverReason
 	RECTANGLE_COLLISION
 };
 
-extern void ToScore(uint32_t Score, enum GameOverReason GameOverReason);
+extern void ToScore(uint32_t Score, enum GameOverReason GameOverReason, uint32_t HighScore);
+extern void SaveHighScore(uint32_t Score);
+extern uint32_t GetHighScore(void);
 
 #endif /* !defined(_SCORE_H_) */
