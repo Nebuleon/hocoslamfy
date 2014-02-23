@@ -21,6 +21,10 @@
 #include <stdint.h>
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <pwd.h>
 
 #include "SDL.h"
 
@@ -35,6 +39,9 @@
 static bool  WaitingForRelease = false;
 
 static char* ScoreMessage      = NULL;
+
+static const char* SavePath = ".hocoslamfy";
+static const char* HighScoreFilePath = "highscore";
 
 void ScoreGatherInput(bool* Continue)
 {
@@ -95,7 +102,7 @@ void ScoreOutputFrame()
 	SDL_Flip(Screen);
 }
 
-void ToScore(uint32_t Score, enum GameOverReason GameOverReason)
+void ToScore(uint32_t Score, enum GameOverReason GameOverReason, uint32_t HighScore)
 {
 	if (ScoreMessage != NULL)
 	{
@@ -116,7 +123,15 @@ void ToScore(uint32_t Score, enum GameOverReason GameOverReason)
 			break;
 	}
 
-	while ((NewLength = snprintf(ScoreMessage, Length, "GAME OVER\n%s\n\nYour score was %" PRIu32 "\n\nPress %s to play again\nor %s to exit", GameOverReasonString, Score, GetEnterGamePrompt(), GetExitGamePrompt())) >= Length)
+	char HighScoreStr[256];
+	if (Score > HighScore)
+	{
+		snprintf(HighScoreStr, 256, "NEW High Score: %d \n", Score);
+	} else {
+		snprintf(HighScoreStr, 256, "High Score: %d \n", HighScore);
+	}
+
+	while ((NewLength = snprintf(ScoreMessage, Length, "GAME OVER\n%s\n\nYour score was %" PRIu32 "\n\n%s\n\nPress %s to play again\nor %s to exit", GameOverReasonString, Score, HighScoreStr, GetEnterGamePrompt(), GetExitGamePrompt())) >= Length)
 	{
 		Length = NewLength + 1;
 		ScoreMessage = realloc(ScoreMessage, Length);
@@ -126,3 +141,68 @@ void ToScore(uint32_t Score, enum GameOverReason GameOverReason)
 	DoLogic     = ScoreDoLogic;
 	OutputFrame = ScoreOutputFrame;
 }
+
+int MkDir(char *path)
+{
+	return mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO);
+}
+
+void SaveHighScore(uint32_t Score)
+{
+	struct passwd *pw = getpwuid(getuid());
+	
+	char path[256];
+	snprintf(path, 256, "%s/%s", pw->pw_dir, SavePath);
+	MkDir(path);
+	
+	snprintf(path, 256, "%s/%s/%s", pw->pw_dir, SavePath, HighScoreFilePath);
+	FILE *fp = fopen(path, "w");
+
+	if (!fp)
+	{
+		fprintf(stderr, "%s: Unable to open file.\n", path);
+		return;
+	}
+
+	fprintf(fp, "%d", Score);
+	fclose(fp);
+}
+
+void GetFileLine(char *str, uint32_t size, FILE *fp)
+{
+	int i = 0;
+	for (i = 0; i < size - 1; i++)
+	{
+		int c = fgetc(fp);
+		if (c == EOF || c == '\n')
+		{
+			str[i] = '\0';
+			break;
+		}
+		str[i] = c;
+	}
+	str[size - 1] = '\0';
+}
+
+uint32_t GetHighScore()
+{
+	char path[256];
+	struct passwd *pw = getpwuid(getuid());
+	snprintf(path, 256, "%s/%s/%s", pw->pw_dir, SavePath, HighScoreFilePath);
+
+	FILE *fp = fopen(path, "r");
+
+	if (!fp)
+		return 0;
+
+	char line[256];
+	GetFileLine(line, 256, fp);
+	fclose(fp);
+	
+	uint32_t hs = 0;
+	if (sscanf(line, "%d", &hs) != 1)
+		return 0;
+
+	return hs;
+}
+
