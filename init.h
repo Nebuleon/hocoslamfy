@@ -31,8 +31,6 @@
 #define DATA_PATH "./data/"
 #endif
 
-#define SAVE_PATH "~/hocoslamfy/"
-
 void Initialize(bool* Continue, bool* Error);
 void Finalize(void);
 
