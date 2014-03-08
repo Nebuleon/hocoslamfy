@@ -59,10 +59,12 @@
 
 // The width and height of the player's collision rectangles.
 // Given in meters.
-//Horizontal rectangle:
-#define PLAYER_COL_SIZE_A      0.36f
-//Vertical rectangle:
-#define PLAYER_COL_SIZE_B      0.32f
+                                               //       _______
+#define COLLISION_A_WIDTH      0.36f           //   ..--|  B  |--.. <- Bee
+#define COLLISION_A_HEIGHT     0.18f           // .-____|_____|____-.
+#define COLLISION_B_WIDTH      0.16f           // |  A  | A+B |  A  |
+#define COLLISION_B_HEIGHT     0.32f           // -.____|_____|____.-
+                                               //   --..|_____|..--
 
 // The time between animation frames for the player's character when ascending
 // or descending.
