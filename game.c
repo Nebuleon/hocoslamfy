@@ -45,12 +45,19 @@ static float                  PlayerX;
 static float                  PlayerY;
 // Where the player is going. (Meters per second.)
 static float                  PlayerSpeed;
-// Animation frame for the player when ascending.
+
+// -- Animation control variables --
+
+// Animation frame for the player's character.
 static uint8_t                PlayerFrame;
-// Frame counter for triggering the player blinking animation.
-static uint8_t                PlayerFrameBlink;
-// Time the player has had the current animation frame. (In milliseconds.)
+// Time the player's character has had the current animation frame.
+// (In milliseconds.)
 static uint32_t               PlayerFrameTime;
+// Whether the player's character is currently blinking.
+static bool                   PlayerBlinking;
+// Time the player's character has been blinking, if Blinking is true.
+// Time the player's character has left before blinking, if Blinking is false.
+static uint32_t               PlayerBlinkTime;
 
 // Passed to the score screen after the player is done dying.
 static enum GameOverReason    GameOverReason;
@@ -89,20 +96,60 @@ static void SetStatus(const enum PlayerStatus NewStatus)
 
 static void AnimationControl(Uint32 Milliseconds)
 {
+	Uint32 Remainder = Milliseconds;
 	switch (PlayerStatus)
 	{
 		case ALIVE:
 		case DYING:
-			PlayerFrameTime = (PlayerFrameTime + Milliseconds) % (ANIMATION_TIME * ANIMATION_FRAMES);
-			PlayerFrame = (PlayerFrame + (PlayerFrameTime / ANIMATION_TIME)) % ANIMATION_FRAMES;
-			PlayerFrameBlink = (PlayerFrameBlink + (PlayerFrameTime / ANIMATION_TIME)) % ANIMATION_FRAMES_BLINK;
+			// Get rid of all the times the animation could have been fully
+			// completed since the last frame displayed.
+			Remainder = Remainder % (ANIMATION_TIME * ANIMATION_FRAMES);
+			// If needed, advance the frame by however many steps are now
+			// fully done.
+			PlayerFrame = (PlayerFrame + (PlayerFrameTime + Remainder) / ANIMATION_TIME) % ANIMATION_FRAMES;
+			// Then add milliseconds for the current frame.
+			PlayerFrameTime = (PlayerFrameTime + Remainder) % ANIMATION_TIME;
 			break;
 
 		case COLLIDED:
-			PlayerFrameTime += Milliseconds;
+			PlayerFrameTime += Remainder;
 			if (PlayerFrameTime > COLLISION_TIME)
 				SetStatus(DYING);
 			break;
+	}
+
+	// Make the player's character blink for some time every so often.
+	Remainder = Milliseconds;
+	while (Remainder > 0)
+	{
+		if (PlayerBlinking)
+		{
+			if (PlayerBlinkTime + Remainder >= BLINK_TIME)
+			{
+				Remainder -= BLINK_TIME - PlayerBlinkTime;
+				PlayerBlinking = false;
+				PlayerBlinkTime = NONBLINK_TIME_MIN + rand() % (NONBLINK_TIME_MAX - NONBLINK_TIME_MIN);
+			}
+			else
+			{
+				PlayerBlinkTime += Remainder;
+				Remainder = 0;
+			}
+		}
+		else
+		{
+			if (Remainder >= PlayerBlinkTime)
+			{
+				Remainder -= PlayerBlinkTime;
+				PlayerBlinking = true;
+				PlayerBlinkTime = 0;
+			}
+			else
+			{
+				PlayerBlinkTime -= Remainder;
+				Remainder = 0;
+			}
+		}
 	}
 }
 
@@ -301,13 +348,11 @@ void GameOutputFrame()
 		case ALIVE:
 			if (PlayerSpeed > -2.0f) {
 				PlayerSourceRect.x = 32 * PlayerFrame;
-				if (PlayerFrameBlink > 92)
-					PlayerSourceRect.x = 64 + 32 * PlayerFrame;
 			} else {
 				PlayerSourceRect.x = 128 + 32 * PlayerFrame;
-				if (PlayerFrameBlink > 92)
-					PlayerSourceRect.x = 192 + 32 * PlayerFrame;
 			}
+			if (PlayerBlinking)
+				PlayerSourceRect.x += 64;
 			SDL_BlitSurface(CharacterFrames, &PlayerSourceRect, Screen, &PlayerDestRect);
 #ifdef DRAW_BEE_COLLISION
 			SDL_FillRect(Screen, &PlayerPixelsA, SDL_MapRGB(Screen->format, 255, 255, 255));
@@ -362,6 +407,12 @@ void ToGame(void)
 	PlayerX = FIELD_WIDTH / 4;
 	PlayerY = (FIELD_HEIGHT - PLAYER_COL_SIZE_B) / 2;
 	PlayerSpeed = 0.0f;
+
+	PlayerFrame = 0;
+	PlayerFrameTime = 0;
+	PlayerBlinking = true;
+	PlayerBlinkTime = 0;
+
 	if (Rectangles != NULL)
 	{
 		free(Rectangles);

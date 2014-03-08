@@ -69,11 +69,21 @@
 // Given in milliseconds.
 #define ANIMATION_TIME  50
 
-// The number of animation frames for the player's character when ascending.
+// The number of animation frames for the player's character when ascending or
+// descending.
 #define ANIMATION_FRAMES 2
 
-// The number of animation frames to wait for the player blinking animation.
-#define ANIMATION_FRAMES_BLINK 100
+// The time the player's character should blink each time it does.
+// Given in milliseconds.
+#define BLINK_TIME     200
+
+// The minimum time there can be between two times the player's character is
+// seen blinking. Given in milliseconds.
+#define NONBLINK_TIME_MIN  800
+
+// The maximum time there can be between two times the player's character is
+// seen blinking. Given in milliseconds.
+#define NONBLINK_TIME_MAX 5000
 
 // The time the collision frame should be displayed upon death.
 // Given in milliseconds.
