@@ -123,15 +123,15 @@ void ToScore(uint32_t Score, enum GameOverReason GameOverReason, uint32_t HighSc
 			break;
 	}
 
-	char HighScoreStr[256];
+	char HighScoreString[256];
 	if (Score > HighScore)
 	{
-		snprintf(HighScoreStr, 256, "NEW High Score: %d \n", Score);
+		snprintf(HighScoreString, 256, "NEW High Score: %" PRIu32, Score);
 	} else {
-		snprintf(HighScoreStr, 256, "High Score: %d \n", HighScore);
+		snprintf(HighScoreString, 256, "High Score: %" PRIu32, HighScore);
 	}
 
-	while ((NewLength = snprintf(ScoreMessage, Length, "GAME OVER\n%s\n\nYour score was %" PRIu32 "\n\n%s\n\nPress %s to play again\nor %s to exit", GameOverReasonString, Score, HighScoreStr, GetEnterGamePrompt(), GetExitGamePrompt())) >= Length)
+	while ((NewLength = snprintf(ScoreMessage, Length, "GAME OVER\n%s\n\nYour score was %" PRIu32 "\n\n%s\n\nPress %s to play again\nor %s to exit", GameOverReasonString, Score, HighScoreString, GetEnterGamePrompt(), GetExitGamePrompt())) >= Length)
 	{
 		Length = NewLength + 1;
 		ScoreMessage = realloc(ScoreMessage, Length);
@@ -164,7 +164,7 @@ void SaveHighScore(uint32_t Score)
 		return;
 	}
 
-	fprintf(fp, "%d", Score);
+	fprintf(fp, "%" PRIu32, Score);
 	fclose(fp);
 }
 
@@ -200,7 +200,7 @@ uint32_t GetHighScore()
 	fclose(fp);
 	
 	uint32_t hs = 0;
-	if (sscanf(line, "%d", &hs) != 1)
+	if (sscanf(line, "%" SCNu32, &hs) != 1)
 		return 0;
 
 	return hs;
