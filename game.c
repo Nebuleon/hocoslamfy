@@ -196,6 +196,8 @@ void GameDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 				{
 					Left = Rectangles[RectangleCount - 1].Right + GenDistance;
 					GenDistance += RECT_GEN_SPEED;
+					if (GenDistance < RECT_GEN_MIN)
+						GenDistance = RECT_GEN_MIN;
 				}
 				Rectangles = realloc(Rectangles, (RectangleCount + 2) * sizeof(struct HocoslamfyRect));
 				RectangleCount += 2;

@@ -45,6 +45,11 @@
 // Given in meters (per rectangle).
 #define RECT_GEN_SPEED  -0.01f
 
+// The minimum distance between the edges of two successive rectangles.
+// This distance is required for the player to be able to squeeze past.
+// Given in meters.
+#define RECT_GEN_MIN     0.50f
+
 // The width of each rectangle.
 // Given in meters.
 #define RECT_WIDTH       0.42f
