@@ -5,5 +5,6 @@ Comment=Avoid the bamboo while flying with your bee
 Exec=hocoslamfy-od
 Terminal=false
 Type=Application
+Icon=hocoslamfy
 StartupNotify=true
 Categories=games;
