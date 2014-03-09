@@ -25,6 +25,7 @@
 
 #include "main.h"
 #include "init.h"
+#include "audio.h"
 #include "platform.h"
 #include "title.h"
 
@@ -85,7 +86,7 @@ static SDL_Surface* ConvertSurface(bool* Continue, bool* Error, SDL_Surface* Sou
 
 void Initialize(bool* Continue, bool* Error)
 {
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
 	{
 		*Continue = false;  *Error = true;
 		printf("SDL initialisation failed: %s\n", SDL_GetError());
@@ -139,6 +140,13 @@ void Initialize(bool* Continue, bool* Error)
 		return;
 
 	InitializePlatform();
+	if (!InitializeAudio())
+	{
+		*Continue = false;  *Error = true;
+		return;
+	}
+	else
+		StartBGM();
 
 	// Title screen. (-> title.c)
 	ToTitleScreen();
@@ -147,6 +155,8 @@ void Initialize(bool* Continue, bool* Error)
 void Finalize()
 {
 	uint32_t i;
+	StopBGM();
+	FinalizeAudio();
 	for (i = 0; i < BG_LAYER_COUNT; i++)
 	{
 		SDL_FreeSurface(BackgroundImages[i]);

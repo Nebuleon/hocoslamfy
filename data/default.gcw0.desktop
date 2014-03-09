@@ -6,5 +6,6 @@ Exec=hocoslamfy-od
 Terminal=false
 Type=Application
 Icon=hocoslamfy
+X-OD-Manual=manual-en.txt
 StartupNotify=true
 Categories=games;

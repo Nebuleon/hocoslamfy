@@ -1,6 +1,17 @@
 The code for Hocoslamfy is licensed under the GNU General Public License, version 2 or later at your option.
 
-The artwork for Hocoslamfy is licensed under the Creative Commons Attribution-ShareAlike license, version 3.0 or later at your option.
+The graphical artwork for Hocoslamfy is licensed under the Creative Commons Attribution-ShareAlike license, version 3.0 or later at your option.
 
-Code (c) Nebuleon Fumika <nebuleon@gcw-zero.com>
-Artwork (c) hi-ban
+The background music for Hocoslamfy is derived from "Ladybug Castle" by Rolemusic, licensed under the Creative Commons Attribution license, version 4.0 or later at your option.
+You can find more information about this tune and download it at the following URLs:
+  http://freemusicarchive.org/music/Rolemusic/~/Ladybug_Castle
+  https://archive.org/details/iiiMicrocompoFamiboy80s
+
+Some modifications were made to the music track to make it loop better:
+a) The silence before the start of the track, at 0:00.00000 to 0:00.12525 of the original track, was cut off.
+b) Part of the music that did not loop well was cut off. The part starting at 3:10.36823 sets a different, more tranquil, mood, which culminates in the end of the track, starting at 4:38.16775 where the tempo is slower. Everything past 3:10.36823 of the original track was cut off.
+c) The note starting at 3:10.13370 and ending at 3:10.25105 of the original track was pitch-shifted one octave up to continue a pattern first observed at 0:07.21315.
+
+Code (c) 2014 Nebuleon Fumika <nebuleon@gcw-zero.com>
+Artwork (c) 2014 hi-ban
+Music (c) 2013 Rolemusic, 2014 Nebuleon Fumika (modifications)
