@@ -27,4 +27,4 @@ extern void FinalizeAudio();
 extern void StartBGM();
 extern void StopBGM();
 
-#endif /* !_AUDIO_H_ */
+#endif /* !defined(_AUDIO_H_) */

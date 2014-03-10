@@ -23,6 +23,8 @@
 #include "SDL.h"
 #include "SDL_mixer.h"
 
+#include "init.h"
+
 static Mix_Music* BGM = NULL;
 
 bool InitializeAudio()
@@ -35,14 +37,14 @@ bool InitializeAudio()
 	else
 		printf("Mix_OpenAudio succeeded\n");
 
-	BGM = Mix_LoadMUS("bgm.wav");
+	BGM = Mix_LoadMUS(DATA_PATH "bgm.wav");
 	if (BGM == NULL)
 	{
-		printf("%s: Mix_LoadMUS failed: %s\n", "bgm.wav", Mix_GetError());
+		printf("%s: Mix_LoadMUS failed: %s\n", DATA_PATH "bgm.wav", Mix_GetError());
 		return false;
 	}
 	else
-		printf("Successfully loaded %s\n", "bgm.wav");
+		printf("Successfully loaded %s\n", DATA_PATH "bgm.wav");
 
 	return true;
 }
