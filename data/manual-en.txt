@@ -16,7 +16,7 @@ Hocoslamfy: an open-source Flappy Bird clone created from scratch
 - The aim of the game -
 The aim of Hocoslamfy is to steer your character, a bee, in the space between columns made of bamboo shoots: one that ascends from the ground, and one that descends from the sky (don't ask why - game logic).
 
-One point is awarded per column of bamboo after you successfully steer your character into its space. The game ends when you crash into a bamboo shoot or you fly into the upper or lower edge of the screen.
+One point is awarded per column of bamboo after you successfully steer the bee into its space. The game ends when the bee crashes into a bamboo shoot or you fly into the upper or lower edge of the screen.
 
 After a game ends, your high score is updated and kept in a file. See the 'Files' section for more information.
 
@@ -24,6 +24,8 @@ After a game ends, your high score is updated and kept in a file. See the 'Files
 To start a game from either the title screen or the score screen, press Start or A.
 
 In-game, any face button (A, B, X and Y) allows you to make your bee fly upwards. It is pulled down by gravity.
+
+In-game, Start allows you to pause and resume the game. The bee's momentum from before pausing applies when resuming.
 
 To exit Hocoslamfy from any screen, press Select. In the title screen or the score screen, you can also press B to exit.
 
