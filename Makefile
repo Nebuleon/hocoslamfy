@@ -41,6 +41,7 @@ $(TARGET).opk: $(TARGET)
 	$(SUM) "  OPK     $@"
 	$(CMD)rm -rf .opk_data
 	$(CMD)cp -r data .opk_data
+	$(CMD)cp COPYRIGHT .opk_data/COPYRIGHT
 	$(CMD)cp $< .opk_data/$(TARGET)
 	$(CMD)$(STRIP) .opk_data/$(TARGET)
 	$(CMD)mksquashfs .opk_data $@ -all-root -noappend -no-exports -no-xattrs -no-progress >/dev/null

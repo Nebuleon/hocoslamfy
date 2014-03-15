@@ -39,14 +39,11 @@ The high score is saved to ~/.hocoslamfy/highscore (where ~ represents $HOME). I
 == Credits ==
 Idea: Dong Nguyen, creator of Flappy Bird
 Code: Nebuleon Fumika
-Graphical artwork: hi-ban
+Graphical artwork: hi-ban, Gab1975
 Music: Rolemusic
 
 == Source code ==
 Find the latest source code for Hocoslamfy at:
   https://github.com/Nebuleon/hocoslamfy
-The code is licensed under the GNU General Public License, version 2 or later.
-The graphical artwork is licensed under the Creative Commons Attribution-ShareAlike 3.0 license.
-The music is "Ladybug Castle" by Rolemusic. It is licensed under the Creative Commons Attribution 4.0 license.
-Find this music here:
-  http://freemusicarchive.org/music/Rolemusic/~/Ladybug_Castle
+Full attribution can be found in the COPYRIGHT file, which is also in the release as COPYRIGHT:
+  https://github.com/Nebuleon/hocoslamfy/blob/master/COPYRIGHT

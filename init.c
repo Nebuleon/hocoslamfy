@@ -40,6 +40,17 @@ static const char* BackgroundImageNames[BG_LAYER_COUNT] = {
 	"Grass1.png"
 };
 
+static const char* TitleScreenFrameNames[TITLE_FRAME_COUNT] = {
+	"TitleHeader1.png",
+	"TitleHeader2.png",
+	"TitleHeader3.png",
+	"TitleHeader4.png",
+	"TitleHeader5.png",
+	"TitleHeader6.png",
+	"TitleHeader7.png",
+	"TitleHeader8.png"
+};
+
 static SDL_Surface* LoadImage(const char* Path)
 {
 	char path[256];
@@ -123,6 +134,16 @@ void Initialize(bool* Continue, bool* Error)
 		if ((BackgroundImages[i] = ConvertSurface(Continue, Error, BackgroundImages[i], BackgroundImageNames[i])) == NULL)
 			return;
 	}
+
+	for (i = 0; i < TITLE_FRAME_COUNT; i++)
+	{
+		TitleScreenFrames[i] = LoadImage(TitleScreenFrameNames[i]);
+		if (!CheckImage(Continue, Error, TitleScreenFrames[i], TitleScreenFrameNames[i]))
+			return;
+		if ((TitleScreenFrames[i] = ConvertSurface(Continue, Error, TitleScreenFrames[i], TitleScreenFrameNames[i])) == NULL)
+			return;
+	}
+
 	CharacterFrames = LoadImage("Bee.png");
 	if (!CheckImage(Continue, Error, CharacterFrames, "Bee.png"))
 		return;
@@ -137,6 +158,11 @@ void Initialize(bool* Continue, bool* Error)
 	if (!CheckImage(Continue, Error, ColumnImage, "Bamboo.png"))
 		return;
 	if ((ColumnImage = ConvertSurface(Continue, Error, ColumnImage, "Bamboo.png")) == NULL)
+		return;
+	GameOverFrame = LoadImage("GameOverHeader.png");
+	if (!CheckImage(Continue, Error, GameOverFrame, "GameOverHeader.png"))
+		return;
+	if ((GameOverFrame = ConvertSurface(Continue, Error, GameOverFrame, "GameOverHeader.png")) == NULL)
 		return;
 
 	InitializePlatform();
@@ -162,9 +188,16 @@ void Finalize()
 		SDL_FreeSurface(BackgroundImages[i]);
 		BackgroundImages[i] = NULL;
 	}
+	for (i = 0; i < TITLE_FRAME_COUNT; i++)
+	{
+		SDL_FreeSurface(TitleScreenFrames[i]);
+		TitleScreenFrames[i] = NULL;
+	}
 	SDL_FreeSurface(CharacterFrames);
 	CharacterFrames = NULL;
 	SDL_FreeSurface(ColumnImage);
 	ColumnImage = NULL;
+	SDL_FreeSurface(GameOverFrame);
+	GameOverFrame = NULL;
 	SDL_Quit();
 }

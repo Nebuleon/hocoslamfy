@@ -83,6 +83,21 @@ void ScoreDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 void ScoreOutputFrame()
 {
 	DrawBackground();
+
+	SDL_Rect HeaderDestRect = {
+		.x = (SCREEN_WIDTH - GameOverFrame->w) / 2,
+		.y = ((SCREEN_HEIGHT / 4) - GameOverFrame->h) / 2,
+		.w = GameOverFrame->w,
+		.h = GameOverFrame->h
+	};
+	SDL_Rect HeaderSourceRect = {
+		.x = 0,
+		.y = 0,
+		.w = GameOverFrame->w,
+		.h = GameOverFrame->h
+	};
+	SDL_BlitSurface(GameOverFrame, &HeaderSourceRect, Screen, &HeaderDestRect);
+
 	if (SDL_MUSTLOCK(Screen))
 		SDL_LockSurface(Screen);
 	PrintStringOutline32(ScoreMessage,
@@ -91,9 +106,9 @@ void ScoreOutputFrame()
 		Screen->pixels,
 		Screen->pitch,
 		0,
-		0,
+		SCREEN_HEIGHT / 4,
 		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
+		SCREEN_HEIGHT - (SCREEN_HEIGHT / 4),
 		CENTER,
 		MIDDLE);
 	if (SDL_MUSTLOCK(Screen))
@@ -131,7 +146,7 @@ void ToScore(uint32_t Score, enum GameOverReason GameOverReason, uint32_t HighSc
 		snprintf(HighScoreString, 256, "High Score: %" PRIu32, HighScore);
 	}
 
-	while ((NewLength = snprintf(ScoreMessage, Length, "GAME OVER\n%s\n\nYour score was %" PRIu32 "\n\n%s\n\nPress %s to play again\nor %s to exit", GameOverReasonString, Score, HighScoreString, GetEnterGamePrompt(), GetExitGamePrompt())) >= Length)
+	while ((NewLength = snprintf(ScoreMessage, Length, "%s\n\nYour score was %" PRIu32 "\n\n%s\n\nPress %s to play again\nor %s to exit", GameOverReasonString, Score, HighScoreString, GetEnterGamePrompt(), GetExitGamePrompt())) >= Length)
 	{
 		Length = NewLength + 1;
 		ScoreMessage = realloc(ScoreMessage, Length);
