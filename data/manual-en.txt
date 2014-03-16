@@ -38,9 +38,10 @@ The high score is saved to ~/.hocoslamfy/highscore (where ~ represents $HOME). I
 
 == Credits ==
 Idea: Dong Nguyen, creator of Flappy Bird
-Code: Nebuleon Fumika
+Code: Nebuleon Fumika, hi-ban, jxv
 Graphical artwork: hi-ban, Gab1975
 Music: Rolemusic
+Sound effects: petenice, Aiwha, Mike Koenig, Yannick Lemieux
 
 == Source code ==
 Find the latest source code for Hocoslamfy at:
