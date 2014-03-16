@@ -323,6 +323,52 @@ void GameOutputFrame()
 		SDL_BlitSurface(ColumnImage, &ColumnSourceRect, Screen, &ColumnDestRect);
 	}
 
+	uint32_t PassedCount = 0;
+	for (i = 0; i < RectangleCount; i += 2)
+	{
+		if (Rectangles[i].Passed)
+			PassedCount++;
+	}
+
+	// Draw the scores corresponding to each rectangle.
+	// Above, we grabbed the number of passed rectangles, so now we can get
+	// the score represented by the first rectangle shown.
+	uint32_t RectScore = Score - PassedCount;
+	if (SDL_MUSTLOCK(Screen))
+		SDL_LockSurface(Screen);
+	for (i = 0; i < RectangleCount; i += 2)
+	{
+		RectScore++;
+		char RectScoreString[11];
+		sprintf(RectScoreString, "%" PRIu32, RectScore);
+		uint32_t RenderedWidth = GetRenderedWidth(RectScoreString) + 2;
+		int32_t Left = (int32_t) (((Rectangles[i].Left + Rectangles[i].Right) / 2) * SCREEN_WIDTH / FIELD_WIDTH) - RenderedWidth / 2;
+
+		if (Left >= 0 && Left + RenderedWidth < SCREEN_WIDTH)
+		{
+			Uint32 RectScoreColor;
+			if (Rectangles[i].Passed)
+				RectScoreColor = SDL_MapRGB(Screen->format, 64, 255, 64); // green
+			else
+				RectScoreColor = SDL_MapRGB(Screen->format, 255, 255, 255); // white
+			PrintStringOutline32(RectScoreString,
+				RectScoreColor,
+				SDL_MapRGB(Screen->format, 0, 0, 0),
+				Screen->pixels,
+				Screen->pitch,
+				Left,
+				/* Even-numbered rectangle indices are at the top of the field,
+				 * so start the Y below that. */
+				SCREEN_HEIGHT - (int) (Rectangles[i].Bottom * SCREEN_HEIGHT / FIELD_HEIGHT),
+				RenderedWidth,
+				(int) (GAP_HEIGHT * SCREEN_HEIGHT / FIELD_HEIGHT),
+				CENTER,
+				MIDDLE);
+		}
+	}
+	if (SDL_MUSTLOCK(Screen))
+		SDL_UnlockSurface(Screen);
+
 	// Draw the character.
 	SDL_Rect PlayerDestRect = {
 		.x = (int) (PlayerX * SCREEN_WIDTH / FIELD_WIDTH) - (PLAYER_FRAME_SIZE / 2),
@@ -382,25 +428,6 @@ void GameOutputFrame()
 			SDL_BlitSurface(CharacterFrames, &PlayerSourceRect, Screen, &PlayerDestRect);
 			break;
 	}
-
-	// Draw the player's current score.
-	char ScoreString[17];
-	sprintf(ScoreString, "Score%10" PRIu32, Score);
-	if (SDL_MUSTLOCK(Screen))
-		SDL_LockSurface(Screen);
-	PrintStringOutline32(ScoreString,
-		SDL_MapRGB(Screen->format, 255, 255, 255),
-		SDL_MapRGB(Screen->format, 0, 0, 0),
-		Screen->pixels,
-		Screen->pitch,
-		0,
-		0,
-		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
-		RIGHT,
-		TOP);
-	if (SDL_MUSTLOCK(Screen))
-		SDL_UnlockSurface(Screen);
 
 	SDL_Flip(Screen);
 }
