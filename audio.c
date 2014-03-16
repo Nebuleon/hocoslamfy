@@ -25,7 +25,22 @@
 
 #include "init.h"
 
-static Mix_Music* BGM = NULL;
+static Mix_Music* BGM           = NULL;
+
+static Mix_Chunk* SFX_Fly       = NULL;
+static Mix_Chunk* SFX_Pass      = NULL;
+static Mix_Chunk* SFX_Collision = NULL;
+static Mix_Chunk* SFX_HighScore = NULL;
+
+static Mix_Chunk* LoadSFX(const char* Path)
+{
+	Mix_Chunk* Result = Mix_LoadWAV(Path);
+	if (Result == NULL)
+		printf("%s: Mix_LoadWAV failed: %s\n", Path, Mix_GetError());
+	else
+		printf("Successfully loaded %s\n", Path);
+	return Result;
+}
 
 bool InitializeAudio()
 {
@@ -45,6 +60,11 @@ bool InitializeAudio()
 	}
 	else
 		printf("Successfully loaded %s\n", DATA_PATH "bgm.wav");
+	
+	SFX_Fly       = LoadSFX(DATA_PATH "fly.wav");
+	SFX_Pass      = LoadSFX(DATA_PATH "pass.wav");
+	SFX_Collision = LoadSFX(DATA_PATH "collision.wav");
+	SFX_HighScore = LoadSFX(DATA_PATH "highscore.wav");
 
 	return true;
 }
@@ -54,6 +74,10 @@ void FinalizeAudio()
 	Mix_HaltMusic();
 	Mix_FreeMusic(BGM);
 	BGM = NULL;
+	Mix_FreeChunk(SFX_Fly);
+	Mix_FreeChunk(SFX_Pass);
+	Mix_FreeChunk(SFX_Collision);
+	Mix_FreeChunk(SFX_HighScore);
 	Mix_CloseAudio();
 }
 
@@ -65,4 +89,27 @@ void StartBGM()
 void StopBGM()
 {
 	Mix_HaltMusic();
+}
+
+// In all of the below functions, -1 as parameter #1 means "don't care which
+// SDL_mixer channel gets used to play this sound effect", and 0 as parameter
+// #3 means "when done, loop 0 times".
+void PlaySFXFly()
+{
+	Mix_PlayChannel(-1, SFX_Fly, 0);
+}
+
+void PlaySFXPass()
+{
+	Mix_PlayChannel(-1, SFX_Pass, 0);
+}
+
+void PlaySFXCollision()
+{
+	Mix_PlayChannel(-1, SFX_Collision, 0);
+}
+
+void PlaySFXHighScore()
+{
+	Mix_PlayChannel(-1, SFX_HighScore, 0);
 }

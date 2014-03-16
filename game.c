@@ -33,6 +33,7 @@
 #include "score.h"
 #include "bg.h"
 #include "text.h"
+#include "audio.h"
 
 static uint32_t               Score;
 
@@ -90,6 +91,8 @@ static void SetStatus(const enum PlayerStatus NewStatus)
 {
 	PlayerFrameTime = 0;
 	PlayerStatus = NewStatus;
+	if (NewStatus == COLLIDED)
+		PlaySFXCollision();
 	if (NewStatus == DYING)
 		PlayerSpeed = 0.0f;
 }
@@ -177,6 +180,7 @@ void GameDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 					{
 						Score++;
 						PointAwarded = true;
+						PlaySFXPass();
 					}
 				}
 				// If a rectangle is past the left side, remove it.
@@ -224,6 +228,7 @@ void GameDoLogic(bool* Continue, bool* Error, Uint32 Milliseconds)
 				// [PlayerSpeed += SPEED_BOOST;].
 				PlayerSpeed = SPEED_BOOST;
 				Boost = false;
+				PlaySFXFly();
 			}
 			// Update the player's position.
 			// If the player's position has collided with the borders of the field,

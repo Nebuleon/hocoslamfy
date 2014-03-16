@@ -26,5 +26,9 @@ extern bool InitializeAudio();
 extern void FinalizeAudio();
 extern void StartBGM();
 extern void StopBGM();
+extern void PlaySFXFly();
+extern void PlaySFXPass();
+extern void PlaySFXCollision();
+extern void PlaySFXHighScore();
 
 #endif /* !defined(_AUDIO_H_) */

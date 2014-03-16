@@ -35,6 +35,7 @@
 #include "score.h"
 #include "bg.h"
 #include "text.h"
+#include "audio.h"
 
 static bool  WaitingForRelease = false;
 
@@ -142,6 +143,7 @@ void ToScore(uint32_t Score, enum GameOverReason GameOverReason, uint32_t HighSc
 	if (Score > HighScore)
 	{
 		snprintf(HighScoreString, 256, "NEW High Score: %" PRIu32, Score);
+		PlaySFXHighScore();
 	} else {
 		snprintf(HighScoreString, 256, "High Score: %" PRIu32, HighScore);
 	}
