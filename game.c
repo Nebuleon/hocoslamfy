@@ -90,9 +90,9 @@ void GameGatherInput(bool* Continue)
 static void SetStatus(const enum PlayerStatus NewStatus)
 {
 	PlayerFrameTime = 0;
-	PlayerStatus = NewStatus;
-	if (NewStatus == COLLIDED)
+	if (NewStatus == COLLIDED && PlayerStatus != COLLIDED)
 		PlaySFXCollision();
+	PlayerStatus = NewStatus;
 	if (NewStatus == DYING)
 		PlayerSpeed = 0.0f;
 }
