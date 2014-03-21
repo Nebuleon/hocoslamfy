@@ -105,6 +105,12 @@ void Initialize(bool* Continue, bool* Error)
 		return;
 	} else printf("SDL initialisation succeeded\n");
 
+	SDL_Surface* WindowIcon = LoadImage("hocoslamfy.png");
+	if (!CheckImage(Continue, Error, WindowIcon, "hocoslamfy.png"))
+		return;
+	SDL_WM_SetIcon(WindowIcon, NULL);
+	SDL_WM_SetCaption("hocoslamfy", "hocoslamfy");
+
 	Screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE |
 #ifdef SDL_TRIPLEBUF
 		SDL_TRIPLEBUF
