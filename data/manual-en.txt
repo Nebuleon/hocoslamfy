@@ -1,6 +1,6 @@
-Hocoslamfy: an open-source Flappy Bird clone created from scratch
+Commuslamfy: an open-source Flappy Bird clone featuring Captain Communist
 
-- OpenDingux version, 2014-03-09 -
+- OpenDingux version, 2014-03-21 -
 
 == Table of contents ==
 1. Playing the game
@@ -14,37 +14,37 @@ Hocoslamfy: an open-source Flappy Bird clone created from scratch
 == Playing the game ==
 
 - The aim of the game -
-The aim of Hocoslamfy is to steer your character, a bee, in the space between columns made of bamboo shoots: one that ascends from the ground, and one that descends from the sky (don't ask why - game logic).
+The aim of Commuslamfy is to steer your character, Captain Communist (a red plastic bag with the communist logo on it), in the space between columns made of dollar bills: one that ascends from the ground, and one that descends from the sky (don't ask why - game logic).
 
-One point is awarded per column of bamboo after you successfully steer the bee into its space. The game ends when the bee crashes into a bamboo shoot or you fly into the upper or lower edge of the screen.
+One point is awarded per column of dollar bills after you successfully steer Captain Communist into its space. The game ends when Captain Communist crashes into a dollar bill or you fly into the upper or lower edge of the screen, respectively getting polluted by the clouds of soot or becoming unable to fly due to being stuck on the ground.
 
 After a game ends, your high score is updated and kept in a file. See the 'Files' section for more information.
 
 - Controls -
 To start a game from either the title screen or the score screen, press Start or A.
 
-In-game, any face button (A, B, X and Y) allows you to make your bee fly upwards. It is pulled down by gravity.
+In-game, any face button (A, B, X and Y) allows you to make Captain Communist fly upwards. He is pulled down by gravity.
 
-In-game, Start allows you to pause and resume the game. The bee's momentum from before pausing applies when resuming.
+In-game, Start allows you to pause and resume the game. Captain Communist's momentum from before pausing applies when resuming.
 
-To exit Hocoslamfy from any screen, press Select. In the title screen or the score screen, you can also press B to exit.
+To exit Commuslamfy from any screen, press Select. In the title screen or the score screen, you can also press B to exit.
 
-To avoid starting new games or exiting Hocoslamfy immediately after a death, it is recommended to use the X and Y face buttons. Of course, you can use any button you wish.
+To avoid starting new games or exiting Commuslamfy immediately after a death, it is recommended to use the X and Y face buttons. Of course, you can use any button you wish.
 
 == Files ==
 
 - High score -
-The high score is saved to ~/.hocoslamfy/highscore (where ~ represents $HOME). It is written as a decimal number using ASCII digits.
+The high score is saved to ~/.hocoslamfy/highscore (where ~ represents $HOME). It is written as a decimal number using ASCII digits. (This high score is shared amongst all graphical remixes of Hocoslamfy.)
 
 == Credits ==
 Idea: Dong Nguyen, creator of Flappy Bird
 Code: Nebuleon Fumika, hi-ban, jxv
-Graphical artwork: hi-ban, Gab1975
+Graphical artwork: hi-ban, Gab1975, Dnilo
 Music: Rolemusic
 Sound effects: petenice, Aiwha, Mike Koenig, Yannick Lemieux
 
 == Source code ==
-Find the latest source code for Hocoslamfy at:
-  https://github.com/Nebuleon/hocoslamfy
+Find the latest source code for Commuslamfy at:
+  https://github.com/Nebuleon/hocoslamfy/tree/communist
 Full attribution can be found in the COPYRIGHT file, which is also in the release as COPYRIGHT:
-  https://github.com/Nebuleon/hocoslamfy/blob/master/COPYRIGHT
+  https://github.com/Nebuleon/hocoslamfy/blob/communist/COPYRIGHT

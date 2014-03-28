@@ -348,7 +348,7 @@ void GameOutputFrame()
 		{
 			Uint32 RectScoreColor;
 			if (Rectangles[i].Passed)
-				RectScoreColor = SDL_MapRGB(Screen->format, 64, 255, 64); // green
+				RectScoreColor = SDL_MapRGB(Screen->format, 192, 0, 0); // communist red
 			else
 				RectScoreColor = SDL_MapRGB(Screen->format, 255, 255, 255); // white
 			PrintStringOutline32(RectScoreString,

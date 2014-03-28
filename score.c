@@ -135,7 +135,7 @@ void ToScore(uint32_t Score, enum GameOverReason GameOverReason, uint32_t HighSc
 			GameOverReasonString = "You flew too far away from the field";
 			break;
 		case RECTANGLE_COLLISION:
-			GameOverReasonString = "You crashed into a bamboo shoot";
+			GameOverReasonString = "You crashed into CAPITALISM!";
 			break;
 	}
 
