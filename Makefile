@@ -13,8 +13,9 @@ else
 endif
 
 SYSROOT     := $(shell $(CC) --print-sysroot)
-SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
-SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
+SDL_CONFIG  ?= $(SYSROOT)/usr/bin/sdl-config
+SDL_CFLAGS  := $(shell $(SDL_CONFIG) --cflags)
+SDL_LIBS    := $(shell $(SDL_CONFIG) --libs)
 
 OBJS        += main.o init.o title.o game.o score.o audio.o bg.o text.o unifont.o
               
