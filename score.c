@@ -24,7 +24,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifndef DONT_USE_PWD
 #include <pwd.h>
+#endif
 
 #include "SDL.h"
 
@@ -161,18 +163,26 @@ void ToScore(uint32_t Score, enum GameOverReason GameOverReason, uint32_t HighSc
 
 int MkDir(char *path)
 {
+#ifndef DONT_USE_PWD
 	return mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO);
+#else
+	return mkdir(path);
+#endif
 }
 
 void SaveHighScore(uint32_t Score)
 {
+	char path[256];
+#ifndef DONT_USE_PWD
 	struct passwd *pw = getpwuid(getuid());
 	
-	char path[256];
 	snprintf(path, 256, "%s/%s", pw->pw_dir, SavePath);
 	MkDir(path);
 	
 	snprintf(path, 256, "%s/%s/%s", pw->pw_dir, SavePath, HighScoreFilePath);
+#else
+	snprintf(path, 256, "%s", HighScoreFilePath);
+#endif
 	FILE *fp = fopen(path, "w");
 
 	if (!fp)
@@ -204,8 +214,12 @@ void GetFileLine(char *str, uint32_t size, FILE *fp)
 uint32_t GetHighScore()
 {
 	char path[256];
+#ifndef DONT_USE_PWD
 	struct passwd *pw = getpwuid(getuid());
 	snprintf(path, 256, "%s/%s/%s", pw->pw_dir, SavePath, HighScoreFilePath);
+#else
+	snprintf(path, 256, "%s", HighScoreFilePath);
+#endif
 
 	FILE *fp = fopen(path, "r");
 
