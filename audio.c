@@ -25,6 +25,8 @@
 
 #include "init.h"
 
+static bool       SND_Available = false;
+
 static Mix_Music* BGM           = NULL;
 
 static Mix_Chunk* SFX_Fly       = NULL;
@@ -46,49 +48,64 @@ bool InitializeAudio()
 {
 	if (Mix_OpenAudio(44100, AUDIO_S16SYS, 2 /* stereo */, 1024 /* buffer size */))
 	{
-		printf("Mix_OpenAudio failed: %s\n", Mix_GetError());
-		return false;
+		printf("warning: Mix_OpenAudio failed: %s\n", Mix_GetError());
+		printf("Sound will not be available.\n");
 	}
 	else
-		printf("Mix_OpenAudio succeeded\n");
-
-	BGM = Mix_LoadMUS(DATA_PATH "bgm.wav");
-	if (BGM == NULL)
 	{
-		printf("%s: Mix_LoadMUS failed: %s\n", DATA_PATH "bgm.wav", Mix_GetError());
-		return false;
+		printf("Mix_OpenAudio succeeded\n");
+		SND_Available = true;
 	}
-	else
-		printf("Successfully loaded %s\n", DATA_PATH "bgm.wav");
-	
-	SFX_Fly       = LoadSFX(DATA_PATH "fly.wav");
-	SFX_Pass      = LoadSFX(DATA_PATH "pass.wav");
-	SFX_Collision = LoadSFX(DATA_PATH "collision.wav");
-	SFX_HighScore = LoadSFX(DATA_PATH "highscore.wav");
+
+	if (SND_Available)
+	{
+		BGM = Mix_LoadMUS(DATA_PATH "bgm.wav");
+		if (BGM == NULL)
+		{
+			printf("%s: Mix_LoadMUS failed: %s\n", DATA_PATH "bgm.wav", Mix_GetError());
+			return false;
+		}
+		else
+			printf("Successfully loaded %s\n", DATA_PATH "bgm.wav");
+
+		SFX_Fly       = LoadSFX(DATA_PATH "fly.wav");
+		SFX_Pass      = LoadSFX(DATA_PATH "pass.wav");
+		SFX_Collision = LoadSFX(DATA_PATH "collision.wav");
+		SFX_HighScore = LoadSFX(DATA_PATH "highscore.wav");
+	}
 
 	return true;
 }
 
 void FinalizeAudio()
 {
-	Mix_HaltMusic();
-	Mix_FreeMusic(BGM);
-	BGM = NULL;
-	Mix_FreeChunk(SFX_Fly);
-	Mix_FreeChunk(SFX_Pass);
-	Mix_FreeChunk(SFX_Collision);
-	Mix_FreeChunk(SFX_HighScore);
-	Mix_CloseAudio();
+	if (SND_Available)
+	{
+		Mix_HaltMusic();
+		Mix_FreeMusic(BGM);
+		BGM = NULL;
+		Mix_FreeChunk(SFX_Fly);
+		Mix_FreeChunk(SFX_Pass);
+		Mix_FreeChunk(SFX_Collision);
+		Mix_FreeChunk(SFX_HighScore);
+		Mix_CloseAudio();
+	}
 }
 
 void StartBGM()
 {
-	Mix_PlayMusic(BGM, -1 /* loop indefinitely */);
+	if (SND_Available)
+	{
+		Mix_PlayMusic(BGM, -1 /* loop indefinitely */);
+	}
 }
 
 void StopBGM()
 {
-	Mix_HaltMusic();
+	if (SND_Available)
+	{
+		Mix_HaltMusic();
+	}
 }
 
 // In all of the below functions, -1 as parameter #1 means "don't care which
@@ -96,20 +113,32 @@ void StopBGM()
 // #3 means "when done, loop 0 times".
 void PlaySFXFly()
 {
-	Mix_PlayChannel(-1, SFX_Fly, 0);
+	if (SND_Available)
+	{
+		Mix_PlayChannel(-1, SFX_Fly, 0);
+	}
 }
 
 void PlaySFXPass()
 {
-	Mix_PlayChannel(-1, SFX_Pass, 0);
+	if (SND_Available)
+	{
+		Mix_PlayChannel(-1, SFX_Pass, 0);
+	}
 }
 
 void PlaySFXCollision()
 {
-	Mix_PlayChannel(-1, SFX_Collision, 0);
+	if (SND_Available)
+	{
+		Mix_PlayChannel(-1, SFX_Collision, 0);
+	}
 }
 
 void PlaySFXHighScore()
 {
-	Mix_PlayChannel(-1, SFX_HighScore, 0);
+	if (SND_Available)
+	{
+		Mix_PlayChannel(-1, SFX_HighScore, 0);
+	}
 }
